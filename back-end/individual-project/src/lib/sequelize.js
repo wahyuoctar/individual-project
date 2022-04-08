@@ -11,11 +11,26 @@ const sequelize = new Sequelize({
 })
 
 // Models
+const User = require("../models/user")(sequelize)
+const Comment = require("../models/comment")(sequelize)
+const Post = require("../models/post")(sequelize)
+const Like = require("../models/like")(sequelize)
+
 
 // Associations 1:M
+User.hasMany(Post, {foreignKey: "user_id"})
+Post.belongsTo(User, {foreignKey: "user_id"})
 
 // Associations M:M
+Comment.belongsTo(User, {foreignKey: "user_id"})
+User.hasMany(Comment, {foreignKey: "user_id"})
+Comment.belongsTo(Post, {foreignKey: "post_id"})
+Post.hasMany(Comment, {foreignKey: "post_id"})
 
 module.exports = {
-    sequelize
+    sequelize,
+    User,
+    Comment,
+    Post,
+    Like
 }
