@@ -1,6 +1,7 @@
 const { Op } = require("sequelize");
 const { User } = require("../lib/sequelize");
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcrypt");
+const fileUploader = require("../lib/uploader");
 
 const userControllers = {
     getAllUser: async (req, res) => {
@@ -21,7 +22,12 @@ const userControllers = {
 
     createNewUser: async (req, res) => {
         try {
-            const {username, fullname, email, password, biography, current_city, ava_pict} = req.body
+            const {username, fullname, email, password, biography, current_city} = req.body
+
+            // Variable variable yg berfungsi untuk nama file pada avatar yg diupload
+            const uploadFileDomain = process.env.UPLOAD_FILE_DOMAIN
+            const filePath = "ava_pics"
+            const { filename} = req.file
 
             const findEmailUsername = await User.findOne({
                 where: {
@@ -46,7 +52,7 @@ const userControllers = {
                 email, 
                 password: encryptPassword, 
                 biography,
-                ava_pict, 
+                ava_pic: `${uploadFileDomain}/${filePath}/${filename}`, 
                 current_city
             })
 
@@ -61,6 +67,10 @@ const userControllers = {
             })
         }
     },
+
+    editUser: async (req, res) => {
+        const {fullname, biography, username} = req.body
+    }
 }
 
 module.exports = userControllers
