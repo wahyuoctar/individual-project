@@ -11,4 +11,10 @@ router.post("/", fileUploader({
     fileType: "image"
 }).single("ava_pic_file"), userControllers.createNewUser)
 
+router.patch("/:userId", fileUploader({
+    destinationFolder: "avatars",
+    prefix: "AVATAR",
+    fileType: "image"
+}).single("ava_pic_file"), userControllers.editUser)
+
 module.exports = router
