@@ -10,11 +10,7 @@ const HomePage = () => {
     
     const fetchContentList = async () => {
             try {
-                const res = await axiosInstance.get(`/posts`, {
-                    params: {
-                        _expand: "user"
-                    }
-                })
+                const res = await axiosInstance.get(`/posts`)
                 setContentList(res.data.result)
                 
             } catch (error) {
@@ -36,10 +32,10 @@ const renderContentList = () => {
         <Container maxW="5xl" shadow="lg" marginTop="10">
             
         <PhotosCard
-        fullName = {val?.user?.fullname || "Fullname"}
-        avaPic = {val?.user?.ava_pic}
+        fullName = {val?.User?.fullname || "Fullname"}
+        avaPic = {val?.User?.ava_pic}
         caption = {val?.caption}
-        likes = {val?.likes}
+        likes = {val?.like_count}
         location = {val?.location}
         imageUrl = {val?.image_url}
         id = {val?.id}

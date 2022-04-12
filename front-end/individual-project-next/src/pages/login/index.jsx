@@ -100,7 +100,7 @@ const LoginPage = () => {
             <Divider />
 
             <Center>
-            <Button marginY="4" width="md" colorScheme="green">Register</Button>
+            <Button onClick={() => router.push("/registration")} marginY="4" width="md" colorScheme="green">Register</Button>
             </Center>
                 
             </Box>

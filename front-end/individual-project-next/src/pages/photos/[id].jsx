@@ -11,11 +11,11 @@ const UsersPhotosPage = ({photosDetail, webUrl}) => {
         <Container maxW="5xl" shadow="lg" marginTop="10">
 
         <PhotosCard imageUrl={photosDetail?.image_url}
-        avaPic={photosDetail?.ava_pic}
+        avaPic={photosDetail?.User?.ava_pic}
         location={photosDetail?.location}
-        fullName={photosDetail?.fullname || "Fullname"}
+        fullName={photosDetail?.User?.fullname || "Fullname"}
         id={photosDetail?.id}
-        likes={photosDetail?.likes}
+        likes={photosDetail?.like_count}
         caption={photosDetail?.caption}
         />
         </Container>
@@ -23,9 +23,9 @@ const UsersPhotosPage = ({photosDetail, webUrl}) => {
 }
 
 export async function getServerSideProps(context) {
-    const id = context.params.id
+    const {id} = context.params
 
-    const res = await axiosInstance.get("/posts/" + id)
+    const res = await axiosInstance.get(`/posts/${id}`)
 
     return {
         props: {
