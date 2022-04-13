@@ -15,22 +15,13 @@ export const userLogin = (values, setSubmitting) => {
         },
       });
 
-      if (!res.data.length) {
-        throw new Error("User not found");
-      }
-
-      if (res.data[0].password !== values.password) {
-        throw new Error("Wrong password");
-      }
-
-      const userData = res.data[0];
-      const stringifiedUserData = JSON.stringify(userData);
-
-      localStorage.set("user_data", stringifiedUserData);
-
+      const userResponse = res.data.result
+      
+      localStorage.set("user_data", userResponse.username);
+      
       dispatch({
         type: user_types.LOGIN_USER,
-        payload: userData,
+        payload: userResponse,
       });
 
       setSubmitting(false)

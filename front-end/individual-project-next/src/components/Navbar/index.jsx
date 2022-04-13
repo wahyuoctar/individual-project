@@ -23,10 +23,10 @@ const Navbar = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (userSelector.id) {
+    if (userSelector.username) {
       dispatch(userLogin());
     }
-  }, [userSelector.id]);
+  }, [userSelector.username]);
 
   const logoutBtnHandler = () => {
     dispatch({
@@ -56,7 +56,7 @@ const Navbar = () => {
         </Stack>
 
         <Stack spacing={4} direction="row">
-          {userSelector.id ? (
+          {userSelector.username ? (
             <Button onClick={logoutBtnHandler} colorScheme="blackAlpha">
               Logout
             </Button>

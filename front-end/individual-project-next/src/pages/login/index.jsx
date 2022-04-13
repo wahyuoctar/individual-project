@@ -1,15 +1,18 @@
-import {Text, Box, Input, FormControl, Button, Center, Divider, useToast, FormHelperText} from '@chakra-ui/react'
+import {InputRightElement, Icon, Text, Box, Input, FormControl, Button, Center, Divider, useToast, FormHelperText, InputGroup} from '@chakra-ui/react'
 import { axiosInstance } from '../../config/api'
 import {useDispatch, useSelector} from 'react-redux'
 import {useFormik} from 'formik'
 import * as Yup from 'yup'
 import  user_types  from '../../redux/types/user'
 import {useRouter} from 'next/router'
-import {Navigate} from 'react-router-dom'
 import Home from '..'
+import { useState } from 'react'
+import { IoMdEye, IoMdEyeOff} from 'react-icons/io'
+
 
 const LoginPage = () => {
     const userSelector = useSelector((state) => state.user)
+    const [visiblePassword, setVisiblePassword] = useState(false)
 
     // Variable untuk dispatch
     const dispatch = useDispatch()
@@ -28,27 +31,22 @@ const LoginPage = () => {
         },
         onSubmit: async (values) => {
             try {
-                const res = await axiosInstance.get("/my_account", {
-                    params: {
+                const res = await axiosInstance.post("/auth/login", {
                         username: values.username,
                         password: values.password
-                    }
                 })
 
-                if(res.data.length){
+                if(res.data){
                     dispatch({
                         type: user_types.LOGIN_USER,
                         payload: {
-                            id: res.data[0].id,
-                            username: res.data[0].username,
-                            userId: res.data[0].id
+                            username: res.data.result.username,
                         }
                     })
 
                     localStorage.setItem("user_data", JSON.stringify({
-                        id: res.data[0].id,
-                        username: res.data[0].username,
-                        userId: res.data[0].id})
+                        username: res.data.result.username,
+                        userId: res.data.result.id})
                     )
 
                     router.push("/")
@@ -91,7 +89,10 @@ const LoginPage = () => {
             <FormControl isInvalid={formik.errors.password}>
             <FormHelperText>{formik.errors.password}</FormHelperText>
             {/* Input Password */}
-            <Input onChange={(event) => formik.setFieldValue("password", event.target.value)} type="password" mb="4" placeholder='Password' id='inputPassword' />
+            <InputGroup>
+            <Input onChange={(event) => formik.setFieldValue("password", event.target.value)} type={visiblePassword ? "text" : "password"} mb="4" placeholder='Password' id='inputPassword' />
+            <InputRightElement children={<Icon onClick={() => setVisiblePassword(!visiblePassword)} as={visiblePassword ? IoMdEye : IoMdEyeOff} sx={{ _hover: { cursor: "pointer" } }}/>} />
+            </InputGroup>
             </FormControl>
 
             <Center>

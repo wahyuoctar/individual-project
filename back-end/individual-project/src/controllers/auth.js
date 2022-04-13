@@ -9,7 +9,44 @@ const mailer = require("../lib/mailer")
 
 const authControllers = {
     loginUser: async (req, res) => {
+        try {
+            const { username, password } = req.body
 
+            const findUser = await User.findOne({
+                where: {
+                    username
+                }
+            })
+
+            if (!findUser) {
+                return res.status(400).json({
+                    message: "Wrong username or password"
+                })
+            }
+
+            const passwordCompare = bcrypt.compareSync(password, findUser.password)
+
+            if (!passwordCompare) {
+                return res.status(400).json({
+                    message: "Wrong username or password"
+                })
+            }
+
+            delete findUser.dataValues.password
+
+            findUser.last_login = moment()
+            findUser.save()
+
+            return res.status(200).json({
+                message: "Logged in user",
+                result: findUser 
+              })
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json({
+                message: "Can't Reach Server"
+            })
+        }
     },
 
     registerUser: async (req, res) => {
@@ -71,6 +108,46 @@ const authControllers = {
             return res.status(201).json({
                 message: "Register Successfully!"
             })
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json({
+                message: "Can't Reach Server"
+            })
+        }
+    },
+
+    verifyUser: async (req, res) => {
+        try {
+            const { token } = req.params
+
+            const findToken = await VerificationToken.findOne({
+                where: {
+                    token,
+                    is_valid: true,
+                    valid_until: {
+                        [Op.gt]: moment().utc(),
+                      }
+                }
+            })
+
+            if (!findToken) {
+                return res.status(400).json({
+                    message: "Token is invalid!"
+                })
+            }
+
+            await User.update({
+                is_verified: true
+            },{
+                where: {
+                    id: findToken.user_id
+                }
+            })
+
+            findToken.is_valid = false
+            findToken.save()
+
+            return res.redirect(`http://localhost:3000/verification-success?referral=${token}`)
         } catch (err) {
             console.log(err);
             return res.status(500).json({
