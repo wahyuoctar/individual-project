@@ -1,17 +1,27 @@
 import PhotosCard from "../components/PhotosCard";
 import { axiosInstance } from "../config/api";
 import {useState, useEffect} from 'react'
-import {useToast, Container} from '@chakra-ui/react'
+import {useToast, Container, Spinner, Center, Text} from '@chakra-ui/react'
+import InfiniteScroll from 'react-infinite-scroll-component'
 
 const HomePage = () => {
+    
     const [contentList, setContentList] = useState([])
+    const [page, setPage] = useState(1)
     
     const toast = useToast()
+
+    const limitPage = 3
     
     const fetchContentList = async () => {
             try {
-                const res = await axiosInstance.get(`/posts`)
-                setContentList(res.data.result)
+                const res = await axiosInstance.get(`/posts`, {
+                    params: {
+                        _limit: limitPage,
+                        _page: page
+                    }
+                })
+                setContentList((prevPosts) => [...prevPosts ,...res.data.result])
                 
             } catch (error) {
                 toast({
@@ -25,11 +35,15 @@ const HomePage = () => {
                 }
     }
 
+    const fetchNextPage = () => {
+        setPage(page + 1)
+    }
+
 // Untuk render content
 const renderContentList = () => {
     return contentList.map((val) =>{
         return (
-        <Container maxW="5xl" shadow="lg" marginTop="10">
+        
             
         <PhotosCard
         fullName = {val?.User?.fullname || "Fullname"}
@@ -39,20 +53,34 @@ const renderContentList = () => {
         location = {val?.location}
         imageUrl = {val?.image_url}
         id = {val?.id}
-        userId = {val?.user?.userId}
+        postDate={val?.createdAt}
         />
-        </Container>
+       
     )})
     }
 
     useEffect(() => {
         fetchContentList()
-    }, [])
+    }, [page])
     
     return (
-        <>
+        <InfiniteScroll
+        dataLength={contentList.length}
+        next={fetchNextPage}
+        hasMore={true}
+        loader={
+            <Center>
+                <h4>Loading...</h4>
+            </Center>}
+        endMessage={
+            <h4>End of Post</h4>
+        }
+        onScroll={false}
+        >
+        <Container maxW="5xl" shadow="lg" marginTop="10">
         {renderContentList()}
-        </>
+        </Container>
+        </InfiniteScroll>
        
       )
     }

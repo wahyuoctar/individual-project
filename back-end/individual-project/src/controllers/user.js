@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { User } = require("../lib/sequelize");
+const { User, Post } = require("../lib/sequelize");
 const bcrypt = require("bcrypt");
 
 const userControllers = {
@@ -128,6 +128,34 @@ const userControllers = {
         }
 
         
+    },
+
+    getUserById: async (req, res) => {
+        try {
+            const { userId } = req.params
+
+            const findUser = await User.findOne({
+                where: {
+                    id: userId
+                }
+            })
+
+            if (!findUser) {
+                return res.status(400).json({
+                    message: "User not Found!"
+                })
+            }
+
+            return res.status(200).json({
+                message: "Searching User Successfully!",
+                result: findUser
+            })
+        } catch (err) {
+            console.log(err);
+            res.status(500).json({
+                message: "Can't Reach Server"
+            })
+        }
     }
 }
 

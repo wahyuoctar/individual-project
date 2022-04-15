@@ -3,7 +3,20 @@ const { Post, User, Comment } = require("../lib/sequelize")
 const postControllers = {
     getAllPosts: async (req, res) => {
         try {
+            const {_limit = 7, _page = 1 } = req.query
+
+            delete req.query._limit
+            delete req.query._page
+
             const findAllPosts = await Post.findAll({
+                where: {
+                    ...req.query
+                },
+                order: [
+                    ['createdAt', 'DESC']
+                ] ,
+                limit: _limit ? parseInt(_limit) : undefined,
+                offset: (_page - 1) * _limit,
                 include: [
                     {
                         model: User
@@ -25,11 +38,11 @@ const postControllers = {
 
     createNewPost: async (req, res) => {
         try {
-            const { caption, location, user_id, image_url } = req.body
-            // const {filename} = req.file
+            const { caption, location, user_id } = req.body
+            const {filename} = req.file
 
-            // const uploadFileDomain = process.env.UPLOAD_FILE_DOMAIN
-            // const filePath = "image_url"
+            const uploadFileDomain = process.env.UPLOAD_FILE_DOMAIN
+            const filePath = "image_url"
 
             const findUser = await User.findOne({
                 where: {
@@ -47,7 +60,7 @@ const postControllers = {
                 caption,
                 location,
                 user_id,
-                image_url
+                image_url: `${uploadFileDomain}/${filePath}/${filename}`
             })
 
             return res.status(201).json({

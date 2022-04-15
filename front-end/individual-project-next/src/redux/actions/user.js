@@ -1,23 +1,21 @@
 
 import { axiosInstance } from "../../config/api";
 
-import { user_types, } from "../../redux/types/user"
+import user_types from "../../redux/types/user"
 import { network_types } from "../types/network";
 
 
-export const userLogin = (values, setSubmitting) => {
+export function userLogin (values, setSubmitting)  {
   return async (dispatch) => {
     try {
-      const res = await axiosInstance.get("/users", {
-        params: {
+      const res = await axiosInstance.post("/auth/login", {
           username: values.username,
-          // password: values.password,
-        },
+          password: values.password,
       });
 
       const userResponse = res.data.result
       
-      localStorage.set("user_data", userResponse.username);
+      localStorage.setItem("user_data", JSON.stringify({...userResponse}));
       
       dispatch({
         type: user_types.LOGIN_USER,

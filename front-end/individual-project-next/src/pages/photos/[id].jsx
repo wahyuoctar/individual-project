@@ -4,7 +4,7 @@ import {useRouter} from 'next/router'
 import { axiosInstance } from '../../config/api'
 import PhotosCard from '../../components/PhotosCard'
 
-const UsersPhotosPage = ({photosDetail, webUrl}) => {
+const UsersPhotosPage = ({photosDetail}) => {
     
 
     return (
@@ -17,6 +17,7 @@ const UsersPhotosPage = ({photosDetail, webUrl}) => {
         id={photosDetail?.id}
         likes={photosDetail?.like_count}
         caption={photosDetail?.caption}
+        postDate={photosDetail?.createdAt}
         />
         </Container>
     )
@@ -30,7 +31,7 @@ export async function getServerSideProps(context) {
     return {
         props: {
             photosDetail: res.data.result,
-            webUrl: "http://localhost:3000/home/" + id
+            
         }
     }
 }

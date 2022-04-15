@@ -18,4 +18,6 @@ router.patch("/:userId", fileUploader({
     fileType: "image"
 }).single("ava_pic_file"), userControllers.editUser)
 
+router.get("/:userId", userControllers.getUserById)
+
 module.exports = router

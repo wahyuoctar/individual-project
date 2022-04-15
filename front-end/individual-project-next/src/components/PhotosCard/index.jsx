@@ -1,10 +1,11 @@
-import {Box, Avatar, Text, Image, Stack, Container, Flex, SimpleGrid, Divider, Link as ChakraLink} from '@chakra-ui/react'
+import {Box, Avatar, Text, Image, Stack, Container, Flex, SimpleGrid, Divider, Link as ChakraLink, Spacer} from '@chakra-ui/react'
 import NextLink from 'next/link'
+import moment from 'moment'
 
-const PhotosCard = ({imageUrl, avaPic, location, fullName, id, likes, caption}) => {
+const PhotosCard = ({imageUrl, avaPic, location, fullName, id, likes, caption, postDate}) => {
     return (
         // <Container maxW="5xl" shadow="lg" marginTop="10">
-        <Flex>
+        <Flex mb={"5"}>
         <Box flex={65}>
         <Stack>
             <NextLink href={`/photos/${id}`}>
@@ -26,11 +27,15 @@ const PhotosCard = ({imageUrl, avaPic, location, fullName, id, likes, caption}) 
             <Text color="gray">{location}</Text>
             </Box>
             </Box>
-            <Divider />
+            <Flex>
             <Text fontWeight="bold">{likes?.toLocaleString()} likes</Text>
+            <Text color="gray.400" fontWeight="hairline" ml={"5"}>({moment(postDate).format("MM/DD")})</Text>
+            </Flex>
+
             <Text>{caption}</Text>
             </Box>
         </Flex>
+            <Divider ml={"2"} />
         </Box>
 
 

@@ -53,7 +53,7 @@ const RegistrationPage = () => {
         validationSchema: Yup.object().shape({
             fullname: Yup.string().required("This field is required"),
             username: Yup.string().required("This field is required").min(3, "Your username has to be at least 3 characters"),
-            password: Yup.string().required("This field is required").matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/, "Must Contain 8 Characters, One Uppercase, One Number and One Symbol"),
+            password: Yup.string().required("This field is required").min(8, "Weak Password").matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/, "Must Contain 8 Characters, One Uppercase, One Number and One Symbol"),
             repeatPassword: Yup.string().required("This field is required").oneOf([Yup.ref("password"), null], "Password Must Match"),
             email: Yup.string().required("This field is required").email("Please use a valid email"),
         })

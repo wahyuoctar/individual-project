@@ -15,7 +15,7 @@ import Link from "next/link";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { userLogin } from '../../redux/actions/user'
-import { user_types  } from "../../redux/types/user";
+import user_types from "../../redux/types/user";
 
 
 const Navbar = () => {
@@ -23,17 +23,17 @@ const Navbar = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (userSelector.username) {
+    if (userSelector.id) {
       dispatch(userLogin());
     }
-  }, [userSelector.username]);
+  }, [userSelector.id]);
 
   const logoutBtnHandler = () => {
     dispatch({
       type: user_types.LOGOUT_USER,
     });
 
-    localStorage.remove("user_data");
+    localStorage.removeItem("user_data");
   };
 
   return (
@@ -46,7 +46,7 @@ const Navbar = () => {
     >
       <Flex justifyContent="space-between">
         <Stack spacing={4} direction="row">
-          <Link href="/home">
+          <Link href="/">
             <Button>Home</Button>
           </Link>
           <Link href="/profile">
@@ -56,6 +56,7 @@ const Navbar = () => {
         </Stack>
 
         <Stack spacing={4} direction="row">
+          <Avatar src={userSelector?.ava_pic} />
           {userSelector.username ? (
             <Button onClick={logoutBtnHandler} colorScheme="blackAlpha">
               Logout

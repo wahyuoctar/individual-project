@@ -6,7 +6,7 @@ import * as Yup from 'yup'
 import  user_types  from '../../redux/types/user'
 import {useRouter} from 'next/router'
 import Home from '..'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { IoMdEye, IoMdEyeOff} from 'react-icons/io'
 
 
@@ -39,15 +39,10 @@ const LoginPage = () => {
                 if(res.data){
                     dispatch({
                         type: user_types.LOGIN_USER,
-                        payload: {
-                            username: res.data.result.username,
-                        }
+                        payload: res.data.result
                     })
 
-                    localStorage.setItem("user_data", JSON.stringify({
-                        username: res.data.result.username,
-                        userId: res.data.result.id})
-                    )
+                    localStorage.setItem("user_data", JSON.stringify({...res.data.result}))
 
                     router.push("/")
                 }
@@ -67,9 +62,12 @@ const LoginPage = () => {
         validateOnChange: true
     })
 
-    if(userSelector.id){
-        return <Home />
-    }
+    useEffect(() =>{
+        
+        if(userSelector.id){
+           router.push("/")
+        } 
+    },[])
 
 
     return (
@@ -101,7 +99,7 @@ const LoginPage = () => {
             <Divider />
 
             <Center>
-            <Button onClick={() => router.push("/registration")} marginY="4" width="md" colorScheme="green">Register</Button>
+            <Button onClick={() => router.push("/register")} marginY="4" width="md" colorScheme="green">Register</Button>
             </Center>
                 
             </Box>

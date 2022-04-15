@@ -1,4 +1,6 @@
 const postControllers = require("../controllers/post")
+const fileUploader = require("../lib/uploader")
+
 
 const router = require("express").Router()
 
@@ -6,7 +8,12 @@ const router = require("express").Router()
 router.get("/", postControllers.getAllPosts)
 
 // Create New Post
-router.post("/", postControllers.createNewPost)
+router.post("/", fileUploader({
+destinationFolder: "posts",
+prefix: "POST",
+fileType: "image"
+}).single("image_url"), 
+postControllers.createNewPost)
 
 // Get Post Detail
 router.get("/:postId", postControllers.getPostById)

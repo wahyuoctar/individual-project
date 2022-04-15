@@ -2,8 +2,9 @@ import user_types from "../../types/user"
 
 const init_state = {
     id: 0,
-    userId: 0,
-    username: ""
+    username: "",
+    fullname: "",
+    ava_pic: ""
 }
 
 const userReducer = (state = init_state, action) => {
@@ -11,8 +12,9 @@ const userReducer = (state = init_state, action) => {
         return {
             ...state,
             id: action.payload.id,
-            userId: action.payload.userId,
-            username: action.payload.username
+            username: action.payload.username,
+            fullname: action.payload.fullname,
+            ava_pic: action.payload.ava_pic
         }
     }
     else if(action.type === user_types.LOGOUT_USER){
