@@ -13,8 +13,8 @@ const init_state = {
     is_verified: 0
 }
 
-export const userReducer = (state = init_state, action) => {
-    if(action.type === user_types.LOGIN_USER){
+export const authReducers = (state = init_state, action) => {
+    if(action.type === user_types.KEEP_LOGIN){
         return {
             ...state,
             id: action.payload.id,

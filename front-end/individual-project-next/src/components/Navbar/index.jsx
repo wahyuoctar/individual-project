@@ -14,26 +14,27 @@ import {
 import Link from "next/link";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { userLogin } from '../../redux/actions/user'
-import user_types from "../../redux/types/user";
+import { fetchUserData, userLogin } from '../../redux/actions/auth'
+import {user_types} from "../../redux/types/user";
 
 
 const Navbar = () => {
+  const authSelector = useSelector((state) => state.auth);
   const userSelector = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (userSelector.id) {
-      dispatch(userLogin());
+  useEffect( async () => {
+    if (authSelector.id) {
+      dispatch(fetchUserData());
     }
-  }, [userSelector.id]);
+  }, [authSelector.id]);
 
   const logoutBtnHandler = () => {
     dispatch({
       type: user_types.LOGOUT_USER,
     });
 
-    localStorage.removeItem("user_data");
+    localStorage.removeItem("user_token");
   };
 
   return (
@@ -56,8 +57,17 @@ const Navbar = () => {
         </Stack>
 
         <Stack spacing={4} direction="row">
-          <Avatar src={userSelector?.ava_pic} />
-          {userSelector.username ? (
+          <Menu>
+            <MenuButton>
+            <Avatar src={userSelector?.ava_pic} />
+            </MenuButton>
+            <MenuList>
+              <MenuItem>Edit My Profile</MenuItem>
+            </MenuList>
+          
+
+          </Menu>
+          {userSelector.id ? (
             <Button onClick={logoutBtnHandler} colorScheme="blackAlpha">
               Logout
             </Button>

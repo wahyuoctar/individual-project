@@ -8,7 +8,7 @@ const UsersPhotosPage = ({photosDetail}) => {
     
 
     return (
-        <Container maxW="5xl" shadow="lg" marginTop="10">
+        <Container maxW="5xl" shadow="dark-lg" marginTop="10">
 
         <PhotosCard imageUrl={photosDetail?.image_url}
         avaPic={photosDetail?.User?.ava_pic}

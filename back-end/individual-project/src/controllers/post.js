@@ -1,4 +1,5 @@
 const { Post, User, Comment } = require("../lib/sequelize")
+const fs = require("fs")
 
 const postControllers = {
     getAllPosts: async (req, res) => {
@@ -69,6 +70,7 @@ const postControllers = {
             })
         } catch (err) {
             console.log(err);
+            fs.unlinkSync(__dirname + "/../public/posts" + req.file.filename)
             return res.status(500).json({
                 message: "Can't Reach Server"
             })
@@ -91,6 +93,32 @@ const postControllers = {
 
             return res.status(200).json({
                 message: `We Found Post ID: ${postId} !`,
+                result: findPost
+            })
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json({
+                message: "Can't Reach Server"
+            })
+        }
+    },
+
+    getPostByUserId: async (req, res) => {
+        try {
+            const {userId} = req.params
+            const findPost = await Post.findOne({
+                where: {
+                    user_id: userId
+                },
+                include: [
+                    {
+                        model: User
+                    }
+                ]
+            })
+
+            return res.status(200).json({
+                message: `We Found Post ID: ${userId} !`,
                 result: findPost
             })
         } catch (err) {

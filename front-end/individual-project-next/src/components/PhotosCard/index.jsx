@@ -6,7 +6,7 @@ const PhotosCard = ({imageUrl, avaPic, location, fullName, id, likes, caption, p
     return (
         // <Container maxW="5xl" shadow="lg" marginTop="10">
         <Flex mb={"5"}>
-        <Box flex={65}>
+        <Box my="5" flex={65}>
         <Stack>
             <NextLink href={`/photos/${id}`}>
             <ChakraLink>
@@ -17,7 +17,7 @@ const PhotosCard = ({imageUrl, avaPic, location, fullName, id, likes, caption, p
         </Stack>
         </Box>
 
-        <Box flex={35}>
+        <Box my="5" flex={35}>
         <Flex marginLeft="6" marginTop="2">
             <Box display="flex" flexDirection="column"> 
             <Box mb="3" paddingX="2" display="flex" alignItems="center">

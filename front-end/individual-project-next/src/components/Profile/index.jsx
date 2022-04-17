@@ -1,9 +1,14 @@
 import {Avatar, Box, Container, Text, Divider, Input, Button, Flex, useToast} from '@chakra-ui/react'
 import { axiosInstance } from '../../config/api'
-import {useRef, useState} from 'react'
+import {useRef, useState, useEffect} from 'react'
 import {useFormik} from 'formik'
+import { useSelector, useDispatch } from 'react-redux'
+import { fetchUserData } from '../../redux/actions/auth'
 
 const Profile = ({fullname, currentCity, posting, followers, following, biography}) => {
+    const userSelector = useSelector((state) => state.user)
+    const authSelector = useSelector((state) => state.auth)
+    const dispatch = useDispatch()
 
     const toast = useToast()
     const formik = useFormik({
@@ -13,7 +18,8 @@ const Profile = ({fullname, currentCity, posting, followers, following, biograph
         },
 
     })
-
+    
+    // const user = JSON.parse(localStorage.getItem("user_data"))
     const [selectedFile, setSelectedFile] = useState(null)
 
     const inputFile = useRef(null)
@@ -28,7 +34,6 @@ const Profile = ({fullname, currentCity, posting, followers, following, biograph
             alert("Select your Image First!")
             return
         }
-        const user = JSON.parse(localStorage.getItem("user_data"))
         
         const formData = new FormData()
         const {caption, location} = formik.values
@@ -48,37 +53,56 @@ const Profile = ({fullname, currentCity, posting, followers, following, biograph
         }
     }
 
+    const fetchUser = async () => {
+        try {
+            await axiosInstance.get("/users", {
+                params: {
+                    userId: authSelector.id
+                }
+            })
+        } catch (err) {
+            console.log(err.message);
+          }
+    }
+
+    useEffect(() => {
+        const userToken = localStorage.getItem("user_token");
+
+        if (authSelector.id) {
+          dispatch(fetchUserData());
+        }
+      }, [authSelector.id]);
 
     return (
-        <Container minW="xl" shadow="lg" marginTop="10">
-        <Box alignItems="center" display="flex" flexDirection="column">
-            <Avatar size="xl" />
-            <Text mt="2" fontSize="xl" fontWeight="bold">{fullname}</Text>
+        <Container minW="xl" shadow="dark-lg" marginTop="10">
+        <Box py="4" alignItems="center" display="flex" flexDirection="column">
+            <Avatar src={userSelector?.ava_pic} size="xl" />
+            <Text mt="2" fontSize="xl" fontWeight="bold">{userSelector?.fullname}</Text>
             <Text fontSize="sm" color="gray.500">{currentCity}</Text>
             
             <Box display="flex" mt="3">
 
                 {/* Box for posts */}
                 <Box marginLeft="7">
-                <Text textAlign={"center"} fontWeight="bold">{posting}</Text>
+                <Text textAlign={"center"} fontWeight="bold">{userSelector?.posts}</Text>
                 <Text color="gray">Posts</Text>
                 </Box>
 
                 {/* Box for followers */}
                 <Box marginLeft="7">
-                <Text textAlign={"center"} fontWeight="bold">{followers}</Text>
+                <Text textAlign={"center"} fontWeight="bold">{userSelector?.followers}</Text>
                 <Text color="gray">Followers</Text>
                 </Box>
 
                 {/* Box for following */}
                 <Box marginLeft="7">
-                <Text textAlign={"center"} fontWeight="bold">{following}</Text>
+                <Text textAlign={"center"} fontWeight="bold">{userSelector?.following}</Text>
                 <Text color="gray">Following</Text>
                 </Box>
 
             </Box>
 
-            <Text textAlign="center">{biography}</Text>
+            <Text textAlign="center">{userSelector?.biography}</Text>
             <Divider />
 
             <Box padding="2"  my="4" width="xl" borderRadius="md">

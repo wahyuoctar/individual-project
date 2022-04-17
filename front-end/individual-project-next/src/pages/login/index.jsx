@@ -1,13 +1,13 @@
-import {InputRightElement, Icon, Text, Box, Input, FormControl, Button, Center, Divider, useToast, FormHelperText, InputGroup} from '@chakra-ui/react'
+import {InputRightElement, Icon, Text, Box, Input, FormControl, Button, Center, Divider, useToast, FormHelperText, InputGroup, Heading} from '@chakra-ui/react'
 import { axiosInstance } from '../../config/api'
 import {useDispatch, useSelector} from 'react-redux'
 import {useFormik} from 'formik'
 import * as Yup from 'yup'
-import  user_types  from '../../redux/types/user'
 import {useRouter} from 'next/router'
-import Home from '..'
 import { useEffect, useState } from 'react'
 import { IoMdEye, IoMdEyeOff} from 'react-icons/io'
+import { userLogin } from '../../redux/actions/auth'
+import { user_types } from '../../redux/types'
 
 
 const LoginPage = () => {
@@ -30,30 +30,37 @@ const LoginPage = () => {
             password: ""
         },
         onSubmit: async (values) => {
+            console.log(values);
+            // dispatch(userLogin(values, formik.setSubmitting));
+
+            
             try {
                 const res = await axiosInstance.post("/auth/login", {
-                        username: values.username,
-                        password: values.password
-                })
-
-                if(res.data){
-                    dispatch({
-                        type: user_types.LOGIN_USER,
-                        payload: res.data.result
-                    })
-
-                    localStorage.setItem("user_data", JSON.stringify({...res.data.result}))
-
-                    router.push("/")
-                }
+                    username: values.username,
+                    password: values.password,
+                });
+          
+                const userResponse = res.data.result
+                
+                const userData = JSON.stringify({...userResponse})
+                localStorage.setItem("user_token", userResponse.token);
+                
+                dispatch({
+                  type: user_types.LOGIN_USER,
+                  payload: userResponse.user,
+                });
+                router.push("/")
             } catch (error) {
-                console.log(error);
                 toast({
-                    title: "Error",
-                    description: err.message,
+                    title: "Can't Reach The Server",
+                    description: "Connect The Server",
                     status: "error",
-                })  
-            }
+                    duration: 3000,
+                    isClosable: true,
+                    position: "top",
+                  });
+                }
+            
         },
         validationSchema: Yup.object().shape({
             username: Yup.string().required("This field is required").min(3, "Your username has 3 character or more!"),
@@ -67,16 +74,16 @@ const LoginPage = () => {
         if(userSelector.id){
            router.push("/")
         } 
-    },[])
+    },[userSelector.id])
 
 
     return (
         <Box display="flex" alignItems="center" flexDirection="column">
 
 
-            <Box borderColor="blackAlpha.300" margin="10" width="md" borderWidth="thin" padding="2" borderRadius="md">
+            <Box shadow={'dark-lg'} borderColor="blackAlpha.300" margin="10" width="md" borderWidth="thin" padding="2" borderRadius="md">
 
-            <Text textAlign="center" fontSize="4xl" marginY="6">Connect your Account!</Text>
+            <Heading color={"dimgrey"} textAlign="center">LOGIN</Heading>
             
             <FormControl isInvalid={formik.errors.username}>
             <FormHelperText>{formik.errors.username}</FormHelperText>

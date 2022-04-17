@@ -1,16 +1,19 @@
-import { Box, Button, FormControl, FormHelperText, FormLabel, Icon, Input, InputGroup, InputRightElement, Text, useToast } from '@chakra-ui/react'
+import { Heading, Box, Button, Center, FormControl, FormHelperText, FormLabel, Icon, Input, InputGroup, InputRightElement, Text, useToast } from '@chakra-ui/react'
 import {useFormik} from 'formik'
 import {useRouter} from 'next/router'
 import { useState } from 'react'
 import * as Yup from 'yup'
 import { axiosInstance } from '../../config/api'
 import { IoMdEye, IoMdEyeOff} from 'react-icons/io'
+import { useSelector } from 'react-redux'
 
 const RegistrationPage = () => {
     const toast = useToast()
     const router = useRouter()
     const [visiblePassword, setVisiblePassword] = useState(false)
     const [visibleRepeatPassword, setVisibleRepeatPassword] = useState(false)
+
+    const authSelector = useSelector((state) => state.auth)
 
 
     const registerBtnHandler = async () => {
@@ -59,9 +62,14 @@ const RegistrationPage = () => {
         })
     })
 
+    if (authSelector.id) {
+        router.push("/")
+    }
+
     return (
-        <Box display="flex" alignItems="center" flexDirection="column">
-            <Text fontSize="2xl" mb="4">Welcome, please register your account first!</Text>
+        <Center>
+        <Box borderRadius="md" py="2" mt="2" shadow="dark-lg" width="lg" display="flex" alignItems="center" flexDirection="column">
+        <Heading color={"cadetblue"} textAlign="center">REGISTER</Heading>
             <Box width="md">
                 <form>
 
@@ -108,6 +116,7 @@ const RegistrationPage = () => {
                 </form>
             </Box>
         </Box>
+        </Center>
     )
 }
 

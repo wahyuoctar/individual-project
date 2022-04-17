@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { User, VerificationToken } = require("../lib/sequelize");
+const { User, VerificationToken, Session } = require("../lib/sequelize");
 const bcrypt = require("bcrypt");
 const { nanoid } = require("nanoid");
 const moment = require("moment")
@@ -18,15 +18,15 @@ const authControllers = {
                 }
             })
 
-            if (!findUser) {
-                return res.status(400).json({
-                    message: "Wrong username or password"
-                })
-            }
+            // if (!findUser) {
+            //     return res.status(400).json({
+            //         message: "Wrong username or password"
+            //     })
+            // }
 
             const passwordCompare = bcrypt.compareSync(password, findUser.password)
 
-            if (!passwordCompare) {
+            if (!passwordCompare || !findUser) {
                 return res.status(400).json({
                     message: "Wrong username or password"
                 })
@@ -34,12 +34,33 @@ const authControllers = {
 
             delete findUser.dataValues.password
 
+            await Session.update({
+                is_valid: false
+            }, {
+                where: {
+                    user_id: findUser.id,
+                    is_valid: true
+                }
+            })
+
+            const sessionToken = nanoid(45)
+
+            await Session.create({
+                token: sessionToken,
+                user_id: findUser.id,
+                is_valid: true,
+                valid_until: moment().add(1, "day")
+            })
+
             findUser.last_login = moment()
             findUser.save()
 
             return res.status(200).json({
                 message: "Logged in user",
-                result: findUser 
+                result: {
+                    user: findUser,
+                    token: sessionToken
+                } 
               })
         } catch (err) {
             console.log(err);

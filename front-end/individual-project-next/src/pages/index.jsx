@@ -1,7 +1,7 @@
 import PhotosCard from "../components/PhotosCard";
 import { axiosInstance } from "../config/api";
 import {useState, useEffect} from 'react'
-import {useToast, Container, Spinner, Center, Text} from '@chakra-ui/react'
+import {useToast, Container, Spinner, Center, Text, Box} from '@chakra-ui/react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 
 const HomePage = () => {
@@ -70,14 +70,19 @@ const renderContentList = () => {
         hasMore={true}
         loader={
             <Center>
-                <h4>Loading...</h4>
+                <Box width="2xs">
+                    <Center>
+                    <Spinner />
+                    </Center>
+                    <Text textAlign={"center"}>Loading...</Text>
+                </Box>
             </Center>}
         endMessage={
             <h4>End of Post</h4>
         }
         onScroll={false}
         >
-        <Container maxW="5xl" shadow="lg" marginTop="10">
+        <Container borderRadius="md" maxW="5xl" shadow="dark-lg" marginTop="10">
         {renderContentList()}
         </Container>
         </InfiniteScroll>
