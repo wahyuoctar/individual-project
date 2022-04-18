@@ -4,19 +4,22 @@ import {useState, useEffect} from 'react'
 import { useSelector } from 'react-redux'
 import { axiosInstance } from '../../config/api'
 import PhotosCard from '../../components/PhotosCard'
+import {useRouter} from 'next/router'
 
 
 
 const ProfilePage = () => {
     const [posts, setPosts] = useState([])
-    const authSelector = useSelector((state) => state.user)
+    const userSelector = useSelector((state) => state.user)
+    const router = useRouter()
+    
 
     const fetchPosts = async () => {
         try {
-            const res = await axiosInstance.get("/posts/user/" + authSelector.id)
+            const res = await axiosInstance.get("/posts/user/" + userSelector.id)
 
             setPosts(res.data.result)
-            console.log(authSelector.username);
+            console.log(userSelector.username);
         } catch (err) {
             console.log(err.message);
           }
@@ -40,13 +43,19 @@ const ProfilePage = () => {
     }
 
     useEffect(() => {
-          fetchPosts()
-      }, []);
+        if (userSelector.id) {
+            fetchPosts()
+        }
+        else if (!userSelector.id) {
+            router.push("/")
+        }
+      }, [userSelector.id]);
 
-      console.log(posts);
+    //   console.log(posts);
+
 
     return (
-        <Container minW="xl" shadow="dark-lg" marginTop="10">
+        <Container borderRadius="md" minW="5xl" shadow="dark-lg" marginTop="10">
             <Profile />
             <Box>
                 {renderPosts()}

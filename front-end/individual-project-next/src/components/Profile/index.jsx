@@ -40,7 +40,7 @@ const Profile = ({fullname, currentCity, posting, followers, following, biograph
     
         formData.append("caption", caption)
         formData.append("location", location)
-        formData.append("user_id", user.id)
+        formData.append("user_id", 1)
         formData.append("image_url", selectedFile)
     
         try {

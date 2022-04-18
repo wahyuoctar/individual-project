@@ -70,7 +70,7 @@ const userControllers = {
     editUser: async (req, res) => {
         try {
             const { userId } = req.params
-            const {fullname, biography, username} = req.body
+            const {fullname, biography, username, current_city} = req.body
     
             // Mencari user apakah ada atau tidak
             const findUser = await User.findOne({
@@ -108,7 +108,8 @@ const userControllers = {
                 fullname,
                 biography,
                 username,
-                ava_pic: `${uploadFileDomain}/${filePath}/${filename}`
+                ava_pic: `${uploadFileDomain}/${filePath}/${filename}`,
+                current_city
             }, {
                 where: {
                     id: userId

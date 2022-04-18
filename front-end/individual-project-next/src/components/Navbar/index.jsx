@@ -59,20 +59,25 @@ const Navbar = () => {
         </Stack>
 
         <Stack spacing={4} direction="row">
-          <Menu>
+          
+          {userSelector.id ? (
+            <>
+            <Menu>
             <MenuButton>
             <Avatar src={userSelector?.ava_pic} />
             </MenuButton>
             <MenuList>
+              <Link href="/profile/edit-profile">
               <MenuItem>Edit My Profile</MenuItem>
+              </Link>
             </MenuList>
           
 
           </Menu>
-          {userSelector.id ? (
             <Button onClick={logoutBtnHandler} colorScheme="blackAlpha">
               Logout
             </Button>
+            </>
           ) : (
             <Link href="/login">
               <Button colorScheme="teal">Login</Button>

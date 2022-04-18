@@ -1,6 +1,8 @@
-import {Box, Avatar, Text, Image, Stack, Container, Flex, SimpleGrid, Divider, Link as ChakraLink, Spacer} from '@chakra-ui/react'
+import {Box, Avatar, Text, Image, Stack, Icon, Flex, SimpleGrid, Divider, Link as ChakraLink, Spacer, MenuButton, MenuList, MenuItem, Menu} from '@chakra-ui/react'
 import NextLink from 'next/link'
 import moment from 'moment'
+import { FaRegHeart, FaRegComment } from "react-icons/fa"
+import {BsGripVertical} from "react-icons/bs"
 
 const PhotosCard = ({imageUrl, avaPic, location, fullName, id, likes, caption, postDate}) => {
     return (
@@ -26,6 +28,42 @@ const PhotosCard = ({imageUrl, avaPic, location, fullName, id, likes, caption, p
             <Text className="username" fontWeight="bold">{fullName}</Text>
             <Text color="gray">{location}</Text>
             </Box>
+            </Box>
+            <Box>
+
+            
+            {/* Icon Like */}
+            <Icon boxSize="6" marginRight="4" as={FaRegHeart}
+            sx={{_hover: {
+                cursor: "pointer",
+                color: "blue"
+            }}}>
+
+            </Icon>
+
+            {/* Icon Comment */}
+            <Icon boxSize="6" marginRight="4" as={FaRegComment}
+            
+            sx={{_hover: {
+                cursor: "pointer",
+                color: "blue"
+            }}}>
+    
+            </Icon>
+
+            {/* Icon Option */}
+            <Menu>
+            <MenuButton>
+            <Icon boxSize="6" as={BsGripVertical}
+            sx={{_hover: {
+                cursor: "pointer",
+                color: "blue"
+            }}}></Icon>
+            </MenuButton>
+            <MenuList>
+                <MenuItem>Edit Post</MenuItem>
+            </MenuList>
+            </Menu>
             </Box>
             <Flex>
             <Text fontWeight="bold">{likes?.toLocaleString()} likes</Text>

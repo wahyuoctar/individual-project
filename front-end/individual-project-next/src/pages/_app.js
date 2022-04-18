@@ -9,12 +9,12 @@ import AuthProvider from '../components/AuthProvider'
 function MyApp({ Component, pageProps }) {
   return (
     <Provider store={store}>
-    <ChakraProvider>
       <AuthProvider>
+    <ChakraProvider>
       <Navbar />
     <Component {...pageProps} />
-      </AuthProvider>
     </ChakraProvider>
+      </AuthProvider>
     </Provider>
   ) 
 }

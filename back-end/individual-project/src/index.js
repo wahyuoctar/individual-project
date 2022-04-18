@@ -14,7 +14,7 @@ const PORT = process.env.PORT
 app.use(express.json())
 app.use(cors())
 
-
+app.use("/image_url", express.static(`${__dirname}/public/posts`))
 app.use("/users", userRoutes)
 app.use("/posts", postRoutes)
 app.use("/auth", authRoutes)
