@@ -7,7 +7,6 @@ import {useRouter} from 'next/router'
 import { useEffect, useState } from 'react'
 import { IoMdEye, IoMdEyeOff} from 'react-icons/io'
 import { userLogin } from '../../redux/actions/auth'
-import { user_types } from '../../redux/types'
 
 
 const LoginPage = () => {
@@ -29,38 +28,9 @@ const LoginPage = () => {
             username: "",
             password: ""
         },
-        onSubmit: async (values) => {
-            console.log(values);
-            // dispatch(userLogin(values, formik.setSubmitting));
-
-            
-            try {
-                const res = await axiosInstance.post("/auth/login", {
-                    username: values.username,
-                    password: values.password,
-                });
-          
-                const userResponse = res.data.result
-                
-                const userData = JSON.stringify({...userResponse})
-                localStorage.setItem("user_token", userResponse.token);
-                
-                dispatch({
-                  type: user_types.LOGIN_USER,
-                  payload: userResponse.user,
-                });
-                router.push("/")
-            } catch (error) {
-                toast({
-                    title: "Can't Reach The Server",
-                    description: "Connect The Server",
-                    status: "error",
-                    duration: 3000,
-                    isClosable: true,
-                    position: "top",
-                  });
-                }
-            
+        onSubmit: (values) => {
+            // console.log(values);
+            dispatch(userLogin(values, formik.setSubmitting));
         },
         validationSchema: Yup.object().shape({
             username: Yup.string().required("This field is required").min(3, "Your username has 3 character or more!"),

@@ -14,8 +14,8 @@ export function userLogin (values, setSubmitting)  {
 
       const userResponse = res.data.result
       
-      const userData = JSON.stringify({...userResponse})
       localStorage.setItem("user_token", userResponse.token);
+      localStorage.setItem("user_data", JSON.stringify(userResponse.user));
       
       dispatch({
         type: user_types.LOGIN_USER,

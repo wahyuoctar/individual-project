@@ -106,7 +106,7 @@ const postControllers = {
     getPostByUserId: async (req, res) => {
         try {
             const {userId} = req.params
-            const findPost = await Post.findOne({
+            const findPost = await Post.findAll({
                 where: {
                     user_id: userId
                 },

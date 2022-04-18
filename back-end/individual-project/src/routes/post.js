@@ -17,7 +17,7 @@ postControllers.createNewPost)
 
 // Get Post Detail
 router.get("/:postId", postControllers.getPostById)
-router.get("/:userId", postControllers.getPostByUserId)
+router.get("/user/:userId", postControllers.getPostByUserId)
 
 router.get("/:postId/comments", postControllers.getPostComments)
 router.post("/:postId/comments", postControllers.addPostComment)

@@ -39,8 +39,8 @@ const HomePage = () => {
         setPage(page + 1)
     }
 
-// Untuk render content
-const renderContentList = () => {
+    // Untuk render content
+    const renderContentList = () => {
     return contentList.map((val) =>{
         return (
         

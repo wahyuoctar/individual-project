@@ -53,18 +53,6 @@ const Profile = ({fullname, currentCity, posting, followers, following, biograph
         }
     }
 
-    const fetchUser = async () => {
-        try {
-            await axiosInstance.get("/users", {
-                params: {
-                    userId: authSelector.id
-                }
-            })
-        } catch (err) {
-            console.log(err.message);
-          }
-    }
-
     useEffect(() => {
         const userToken = localStorage.getItem("user_token");
 
@@ -74,7 +62,7 @@ const Profile = ({fullname, currentCity, posting, followers, following, biograph
       }, [authSelector.id]);
 
     return (
-        <Container minW="xl" shadow="dark-lg" marginTop="10">
+        
         <Box py="4" alignItems="center" display="flex" flexDirection="column">
             <Avatar src={userSelector?.ava_pic} size="xl" />
             <Text mt="2" fontSize="xl" fontWeight="bold">{userSelector?.fullname}</Text>
@@ -119,7 +107,6 @@ const Profile = ({fullname, currentCity, posting, followers, following, biograph
             </Box>
        
         </Box>
-        </Container>
     )
 }
 

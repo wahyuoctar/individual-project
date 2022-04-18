@@ -1,6 +1,7 @@
-import {combineReducers} from 'redux'
-import { authReducers } from './reducers/auth'
-import {userReducer} from './reducers/user'
+import {combineReducers, createStore, applyMiddleware} from 'redux'
+import { authReducers, userReducer } from './reducers'
+
+import thunk from 'redux-thunk'
  
 
 const rootReducer = combineReducers({
@@ -8,4 +9,7 @@ const rootReducer = combineReducers({
     auth: authReducers
 })
 
-export default rootReducer
+const store = createStore(rootReducer, applyMiddleware(thunk));
+
+
+export default store

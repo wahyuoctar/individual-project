@@ -35,6 +35,8 @@ const Navbar = () => {
     });
 
     localStorage.removeItem("user_token");
+    localStorage.removeItem("user_data");
+
   };
 
   return (
