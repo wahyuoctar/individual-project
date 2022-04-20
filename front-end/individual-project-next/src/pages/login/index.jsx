@@ -29,7 +29,6 @@ const LoginPage = () => {
             password: ""
         },
         onSubmit: (values) => {
-            // console.log(values);
             dispatch(userLogin(values, formik.setSubmitting));
         },
         validationSchema: Yup.object().shape({

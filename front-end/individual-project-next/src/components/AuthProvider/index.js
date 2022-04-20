@@ -1,32 +1,33 @@
-import {useState, useEffect} from 'react'
+import {useEffect} from 'react'
 import {useDispatch} from 'react-redux'
 import {user_types} from '../../redux/types/user'
+import jsCookie from "js-cookie";
+import { axiosInstance } from '../../config/api';
 
 
 const AuthProvider = ({children}) => {
-    const [isLogin, setIsLogin] = useState(false)
 
     const dispatch = useDispatch()
 
-    useEffect(() => {
-        const token = localStorage.getItem("user_token")
-        const savedUserData = localStorage.getItem("user_data")
+    useEffect(async () => {
+        const userToken = jsCookie.get("user_token")
+        // const savedUserData = localStorage.getItem("user_data")
         
-        if (token) {
-            const parsedUserData = JSON.parse(savedUserData)
+        if (userToken) {
+            try {
+                const res = await axiosInstance.get("/auth/update-token")
+                jsCookie.set("user_token", res?.data?.result?.token || "")
 
-            dispatch({
-                type: user_types.LOGIN_USER,
-                payload: parsedUserData
-            })
+                dispatch({
+                    type: user_types.LOGIN_USER,
+                    payload: res.data.result.user
+                })
+            } catch (err) {
+                console.log(err);
+            }
+
         }
-
-        setIsLogin(true)
     }, [])
-
-    if (!setIsLogin){
-        return <h2>Kunaon ieu...?</h2>
-    }
 
     return children
 }

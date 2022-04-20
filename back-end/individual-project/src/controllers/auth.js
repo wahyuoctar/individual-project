@@ -175,6 +175,40 @@ const authControllers = {
                 message: "Can't Reach Server"
             })
         }
+    },
+
+    keepLogin: async (req, res) => {
+        try {
+            const {token} = req
+
+            const newToken = nanoid(21)
+            const findUser = await User.findByPk(token.user_id)
+
+            delete findUser.dataValues.password
+            await Session.update({
+                token: newToken,
+                valid_until: moment().add(1, "day")
+            },
+            {
+                where: {
+                    id: token.id
+                }
+            })
+
+            return res.status(200).json({
+                message: "Token just updated!",
+                result: {
+                    user: findUser,
+                    token: newToken
+                }
+            })
+            
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json({
+                message: "Can't Reach Server"
+            })
+        }
     }
 }
 

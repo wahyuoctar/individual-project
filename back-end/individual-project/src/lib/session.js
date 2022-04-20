@@ -12,6 +12,8 @@ const verifySession = async (token) => {
             }
         }
     })
+
+    return findSession
 }
 
 module.exports = verifySession

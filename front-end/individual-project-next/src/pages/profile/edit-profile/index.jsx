@@ -1,9 +1,9 @@
-import {Avatar, Box, Button, Center, Container, Input, Link} from '@chakra-ui/react'
+import {Avatar, Box, Button, Center, Container, Input} from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { axiosInstance } from '../../../config/api'
 import {useRouter} from 'next/router'
-
+import Link from 'next/link'
 
 const EditProfilePage = () => {
     const [userData, setUserData] = useState({})
@@ -40,7 +40,7 @@ const EditProfilePage = () => {
                     <Input value={`${userData?.current_city}`} my="4"/>
                     <Box>
                         <Button colorScheme="green">Save</Button>
-                        <Link textDecorationStyle="none" href='/profile'>
+                        <Link  href='/profile'>
                         <Button colorScheme="red">Cancel</Button>
                         </Link>
                     </Box>

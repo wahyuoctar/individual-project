@@ -39,7 +39,7 @@ const postControllers = {
 
     createNewPost: async (req, res) => {
         try {
-            const { caption, location, user_id } = req.body
+            const { caption, location} = req.body
             const {filename} = req.file
 
             const uploadFileDomain = process.env.UPLOAD_FILE_DOMAIN
@@ -47,7 +47,7 @@ const postControllers = {
 
             const findUser = await User.findOne({
                 where: {
-                    id: user_id
+                    id: req.token.user_id
                 }
             })
 
@@ -60,7 +60,7 @@ const postControllers = {
             const postCreated = await Post.create({
                 caption,
                 location,
-                user_id,
+                user_id: req.token.user_id,
                 image_url: `${uploadFileDomain}/${filePath}/${filename}`
             })
 
@@ -71,6 +71,43 @@ const postControllers = {
         } catch (err) {
             console.log(err);
             fs.unlinkSync(__dirname + "/../public/posts" + req.file.filename)
+            return res.status(500).json({
+                message: "Can't Reach Server"
+            })
+        }
+    },
+
+    editPost: async (req, res) => {
+        try {
+            const { postId } = req.params
+            const { caption, location } = req.body
+
+            const findPost = await Post.findOne({
+                where: {
+                    id: postId
+                }
+            })
+
+            if (!findPost) {
+                return res.status(400).json({
+                    message: "Post not Found!"
+                })
+            }
+
+            await Post.update({
+                caption,
+                location
+            }, {
+                where: {
+                    id: postId
+            }
+            })
+
+            return res.status(200).json({
+                message: "Post Updated!"
+            })
+        } catch (err) {
+            console.log(err);
             return res.status(500).json({
                 message: "Can't Reach Server"
             })
@@ -88,7 +125,8 @@ const postControllers = {
                     {
                         model: User
                     }
-                ]
+                ],
+                
             })
 
             return res.status(200).json({
@@ -114,6 +152,9 @@ const postControllers = {
                     {
                         model: User
                     }
+                ],
+                order: [
+                    ['createdAt', 'DESC']
                 ]
             })
 

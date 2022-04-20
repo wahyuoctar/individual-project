@@ -4,11 +4,13 @@ import {useRef, useState, useEffect} from 'react'
 import {useFormik} from 'formik'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchUserData } from '../../redux/actions/auth'
+import { useRouter } from 'next/router'
 
 const Profile = ({fullname, currentCity, posting, followers, following, biography}) => {
     const userSelector = useSelector((state) => state.user)
     const authSelector = useSelector((state) => state.auth)
     const dispatch = useDispatch()
+    const router = useRouter()
 
     const toast = useToast()
     const formik = useFormik({
@@ -40,7 +42,7 @@ const Profile = ({fullname, currentCity, posting, followers, following, biograph
     
         formData.append("caption", caption)
         formData.append("location", location)
-        formData.append("user_id", 1)
+        formData.append("user_id", userSelector.id)
         formData.append("image_url", selectedFile)
     
         try {
@@ -48,6 +50,7 @@ const Profile = ({fullname, currentCity, posting, followers, following, biograph
             setSelectedFile(null)
             formik.setFieldValue("caption", "")
             formik.setFieldValue("location", "")
+
         } catch (err) {
             console.log(err);
         }
@@ -59,7 +62,10 @@ const Profile = ({fullname, currentCity, posting, followers, following, biograph
         if (authSelector.id) {
           dispatch(fetchUserData());
         }
-      }, [authSelector.id]);
+        else if (!userSelector.id) {
+            router.push("/")
+        }
+      }, [authSelector.id, selectedFile]);
 
     return (
         

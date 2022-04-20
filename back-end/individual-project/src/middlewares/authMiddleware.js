@@ -12,7 +12,7 @@ const authorizedLoggedInUser = async (req, res, next) => {
 
         console.log(req.token);
 
-
+        next()
     } catch (err) {
         console.log(err)
         return res.status(419).json({

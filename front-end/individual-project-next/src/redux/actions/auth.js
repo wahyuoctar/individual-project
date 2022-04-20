@@ -1,6 +1,7 @@
 
 import { axiosInstance } from "../../config/api";
 import { network_types, user_types } from "../types";
+import jsCookie from "js-cookie";
 
 
 
@@ -14,8 +15,8 @@ export function userLogin (values, setSubmitting)  {
 
       const userResponse = res.data.result
       
-      localStorage.setItem("user_token", userResponse.token);
-      localStorage.setItem("user_data", JSON.stringify(userResponse.user));
+      jsCookie.set("user_token", userResponse.token);
+      // jsCookie.set("user_data", JSON.stringify(userResponse.user));
       
       dispatch({
         type: user_types.LOGIN_USER,
