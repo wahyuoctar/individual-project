@@ -62,7 +62,6 @@ const ProfilePage = () => {
       setSelectedFile(null);
       formik.setFieldValue("caption", "");
       formik.setFieldValue("location", "");
-
       fetchPosts();
     } catch (err) {
       console.log(err);
@@ -157,6 +156,7 @@ const ProfilePage = () => {
               formik.setFieldValue("caption", event.target.value)
             }
             placeholder="Caption..."
+            value={formik.values.caption}
           />
           <Input
             onChange={(event) =>
@@ -164,6 +164,7 @@ const ProfilePage = () => {
             }
             mt={"2"}
             placeholder="Location..."
+            value={formik.values.location}
           />
 
           <Flex my="2" justifyContent="space-between">

@@ -64,6 +64,14 @@ const postControllers = {
                 image_url: `${uploadFileDomain}/${filePath}/${filename}`
             })
 
+            await User.increment({
+                posts: 1
+            },{
+                where: {
+                    id: req.token.user_id
+                }
+            })
+
             return res.status(201).json({
                 message: "Post Added",
                 result: postCreated

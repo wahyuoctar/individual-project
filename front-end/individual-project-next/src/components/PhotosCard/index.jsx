@@ -13,7 +13,7 @@ import {
   MenuItem,
   Menu,
 } from "@chakra-ui/react";
-import NextLink from "next/link";
+import Link from "next/link";
 import moment from "moment";
 import { FaRegHeart, FaRegComment } from "react-icons/fa";
 import { BsGripVertical } from "react-icons/bs";
@@ -37,11 +37,9 @@ const PhotosCard = ({
     <Flex mb={"5"}>
       <Box my="5" flex={65}>
         <Stack>
-          <NextLink href={`/photos/${postId}`}>
-            <ChakraLink>
-              <Image width="100%" src={imageUrl} />
-            </ChakraLink>
-          </NextLink>
+          <Link href={`/photos/${postId}`}>
+            <Image width="100%" src={imageUrl} />
+          </Link>
         </Stack>
       </Box>
 
@@ -57,7 +55,8 @@ const PhotosCard = ({
                 <Text color="gray">{location}</Text>
               </Box>
             </Box>
-            <Box>
+            <Box></Box>
+            <Flex>
               {/* Icon Like */}
               <Icon
                 boxSize="6"
@@ -84,11 +83,16 @@ const PhotosCard = ({
                 }}
               ></Icon>
 
+              <Text fontWeight="bold">{likes?.toLocaleString()} likes</Text>
+              <Text color="gray.400" fontWeight="hairline" ml={"5"}>
+                ({moment(postDate).format("MM/DD")})
+              </Text>
               {/* Icon Option */}
               {postUserId == userId ? (
                 <Menu>
                   <MenuButton>
                     <Icon
+                      ml="4"
                       boxSize="6"
                       as={BsGripVertical}
                       sx={{
@@ -100,17 +104,13 @@ const PhotosCard = ({
                     ></Icon>
                   </MenuButton>
                   <MenuList>
-                    <MenuItem>Edit Post</MenuItem>
+                    <Link href={`/edit-post/${postId}`}>
+                      <MenuItem>Edit Post</MenuItem>
+                    </Link>
                     <MenuItem>Delete Post</MenuItem>
                   </MenuList>
                 </Menu>
               ) : null}
-            </Box>
-            <Flex>
-              <Text fontWeight="bold">{likes?.toLocaleString()} likes</Text>
-              <Text color="gray.400" fontWeight="hairline" ml={"5"}>
-                ({moment(postDate).format("MM/DD")})
-              </Text>
             </Flex>
 
             <Text>{caption}</Text>
