@@ -20,6 +20,9 @@ postControllers.createNewPost)
 // Edit Post
 router.patch("/:postId", authorizedLoggedInUser, postControllers.editPost)
 
+// Delete Post
+router.delete("/:postId", authorizedLoggedInUser, postControllers.deletePost)
+
 // Get Post Detail
 router.get("/:postId", postControllers.getPostById)
 router.get("/user/:userId", postControllers.getPostByUserId)

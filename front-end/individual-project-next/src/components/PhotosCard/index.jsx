@@ -7,17 +7,25 @@ import {
   Icon,
   Flex,
   Divider,
-  Link as ChakraLink,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+  useDisclosure,
   MenuButton,
   MenuList,
   MenuItem,
   Menu,
+  useToast,
 } from "@chakra-ui/react";
 import Link from "next/link";
 import moment from "moment";
 import { FaRegHeart, FaRegComment } from "react-icons/fa";
 import { BsGripVertical } from "react-icons/bs";
 import { useSelector } from "react-redux";
+import { axiosInstance } from "../../config/api";
 
 const PhotosCard = ({
   imageUrl,
@@ -31,6 +39,63 @@ const PhotosCard = ({
   caption,
   postDate,
 }) => {
+  const toast = useToast();
+
+  const AlertDialogExample = () => {
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const cancelRef = React.useRef();
+
+    return (
+      <>
+        <Button colorScheme="red" onClick={onOpen}>
+          Delete Post
+        </Button>
+
+        <AlertDialog
+          isOpen={isOpen}
+          leastDestructiveRef={cancelRef}
+          onClose={onClose}
+        >
+          <AlertDialogOverlay>
+            <AlertDialogContent>
+              <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                Delete Post
+              </AlertDialogHeader>
+
+              <AlertDialogBody>
+                Are you sure? You can't undo this action.
+              </AlertDialogBody>
+
+              <AlertDialogFooter>
+                <Button ref={cancelRef} onClick={onClose}>
+                  Cancel
+                </Button>
+                <Button colorScheme="red" onClick={deleteButton} ml={3}>
+                  Delete
+                </Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialogOverlay>
+        </AlertDialog>
+      </>
+    );
+  };
+
+  const deleteButton = async () => {
+    try {
+      await axiosInstance.delete("/posts/" + postId);
+    } catch (error) {
+      toast({
+        title: "Can't Reach The Server",
+        description: "Connect The Server",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+  };
+
   const userSelector = useSelector((state) => state.user);
   return (
     // <Container maxW="5xl" shadow="lg" marginTop="10">
@@ -107,7 +172,9 @@ const PhotosCard = ({
                     <Link href={`/edit-post/${postId}`}>
                       <MenuItem>Edit Post</MenuItem>
                     </Link>
-                    <MenuItem>Delete Post</MenuItem>
+                    <MenuItem onClick={AlertDialogExample}>
+                      Delete Post
+                    </MenuItem>
                   </MenuList>
                 </Menu>
               ) : null}

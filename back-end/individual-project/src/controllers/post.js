@@ -122,6 +122,45 @@ const postControllers = {
         }
     },
 
+    deletePost: async (req, res) => {
+        try {
+            const { postId } = req.params
+            const findPost = await Post.findOne({
+                where: {
+                    id: postId
+                }
+            })
+
+            if (!findPost) {
+                return res.status(400).json({
+                    message: "Can't find this Post!"
+                })
+            }
+
+            
+            await User.decrement({posts: 1
+            },{
+                where: {
+                    id: findPost.user_id
+                }
+            })
+            
+            await Post.destroy({
+                where: {
+                    id: postId
+                }
+            })
+            return res.status(202).json({
+                message: "Post Deleted!"
+            })
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json({
+                message: "Can't Reach Server"
+            })
+        }
+    },
+
     getPostById: async (req, res) => {
         try {
             const {postId} = req.params
