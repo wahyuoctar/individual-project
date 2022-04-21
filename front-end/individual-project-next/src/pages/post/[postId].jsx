@@ -21,6 +21,7 @@ const UsersPhotosPage = ({ photosDetail }) => {
           postDate={photosDetail?.createdAt}
           userId={userSelector?.id}
           postUserId={photosDetail?.user_id}
+          isInDetail={true}
         />
       </Container>
     </Page>

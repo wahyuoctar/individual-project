@@ -12,8 +12,9 @@ import {
   MenuItem,
   Menu,
   useToast,
+  Link,
 } from "@chakra-ui/react";
-import Link from "next/link";
+// import Link from "next/link";
 import moment from "moment";
 import { FaRegHeart, FaRegComment } from "react-icons/fa";
 import { BsGripVertical } from "react-icons/bs";
@@ -33,8 +34,9 @@ const PhotosCard = ({
   likes,
   caption,
   postDate,
+  isInDetail = false,
+  isInProfile = false,
 }) => {
-  const router = useRouter();
   const toast = useToast();
 
   const deleteButton = async () => {
@@ -60,9 +62,13 @@ const PhotosCard = ({
     <Flex mb={"5"}>
       <Box my="5" flex={65}>
         <Stack>
-          <Link href={`/photos/${postId}`}>
+          {isInDetail ? (
             <Image width="100%" src={imageUrl} />
-          </Link>
+          ) : (
+            <Link href={`/post/${postId}`}>
+              <Image width="100%" src={imageUrl} />
+            </Link>
+          )}
         </Stack>
       </Box>
 
@@ -70,15 +76,25 @@ const PhotosCard = ({
         <Flex marginLeft="6" marginTop="2">
           <Box display="flex" flexDirection="column">
             <Box mb="3" paddingX="2" display="flex" alignItems="center">
-              <Link href={`/profile/${userId}`}>
+              {isInProfile ? (
                 <Avatar src={avaPic} />
-              </Link>
-              <Box marginLeft="2">
+              ) : (
                 <Link href={`/profile/${userId}`}>
+                  <Avatar src={avaPic} />
+                </Link>
+              )}
+              <Box marginLeft="2">
+                {isInProfile ? (
                   <Text className="username" fontWeight="bold">
                     {fullName}
                   </Text>
-                </Link>
+                ) : (
+                  <Link textDecoration="none" href={`/profile/${userId}`}>
+                    <Text className="username" fontWeight="bold">
+                      {fullName}
+                    </Text>
+                  </Link>
+                )}
                 <Text color="gray">{location}</Text>
               </Box>
             </Box>
@@ -115,7 +131,7 @@ const PhotosCard = ({
                 ({moment(postDate).format("MM/DD")})
               </Text>
               {/* Icon Option */}
-              {postUserId == userId ? (
+              {postUserId == userSelector.id ? (
                 <Menu>
                   <MenuButton>
                     <Icon

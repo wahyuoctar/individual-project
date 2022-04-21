@@ -1,9 +1,12 @@
-import { Box, Text, Input, Button, useToast, Flex } from "@chakra-ui/react";
+import { Box, Text, Input, Button, Flex } from "@chakra-ui/react";
 import { useFormik } from "formik";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import { axiosInstance } from "../../config/api";
 
-const PostUploader = () => {
-  const toast = useToast();
+const PostUploader = ({ fetchFunction }) => {
+  const userSelector = useSelector((state) => state.user);
+
   const formik = useFormik({
     initialValues: {
       caption: "",
@@ -38,6 +41,8 @@ const PostUploader = () => {
       setSelectedFile(null);
       formik.setFieldValue("caption", "");
       formik.setFieldValue("location", "");
+
+      fetchFunction;
     } catch (err) {
       console.log(err);
     }

@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Text,
   Divider,
   Input,
@@ -7,19 +6,17 @@ import {
   Flex,
   Container,
   Box,
-  useToast,
 } from "@chakra-ui/react";
 import { useRef, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { axiosInstance } from "../../config/api";
 import PhotosCard from "../../components/PhotosCard";
 import { useFormik } from "formik";
-import { useRouter } from "next/router";
+
 import { fetchUserData } from "../../redux/actions/auth";
 import requiresAuth from "../../lib/hoc/requiresAuth";
 import Page from "../../components/Page";
 import Profile from "../../components/Profile";
-import PostUploader from "../../components/PostUploader";
 
 const ProfilePage = () => {
   const [posts, setPosts] = useState([]);
@@ -27,11 +24,8 @@ const ProfilePage = () => {
   const [selectedFile, setSelectedFile] = useState(null);
 
   const userSelector = useSelector((state) => state.user);
-  const authSelector = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
-  const router = useRouter();
-  const toast = useToast();
   const inputFile = useRef(null);
 
   const handleFile = (event) => {
@@ -93,9 +87,12 @@ const ProfilePage = () => {
           caption={val?.caption}
           likes={val?.like_count}
           location={val?.location}
-          imageUrl={val?.image_url}
           id={val?.id}
+          imageUrl={val?.image_url}
+          userId={userSelector.id}
           postDate={val?.createdAt}
+          isInProfile={true}
+          postUserId={val?.user_id}
         />
       );
     });
@@ -124,7 +121,47 @@ const ProfilePage = () => {
             posts={userSelector?.posts}
           />
           <Divider />
-          <PostUploader />
+          <Box padding="2" my="4" width="xl" borderRadius="md">
+            <Text textShadow="1px 1px #ff0000" as="h3" fontWeight="bold">
+              Please share your moment here!
+            </Text>
+            <Input
+              onChange={(event) =>
+                formik.setFieldValue("caption", event.target.value)
+              }
+              placeholder="Caption..."
+              value={formik.values.caption}
+            />
+            <Input
+              onChange={(event) =>
+                formik.setFieldValue("location", event.target.value)
+              }
+              mt={"2"}
+              placeholder="Location..."
+              value={formik.values.location}
+            />
+
+            <Flex my="2" justifyContent="space-between">
+              <Input
+                accept="image/png, image/jpeg, image/jpg"
+                onChange={handleFile}
+                ref={inputFile}
+                type="file"
+                display="none"
+              />
+              <Button
+                onClick={() => inputFile.current.click()}
+                width="50%"
+                mr="1"
+                colorScheme="facebook"
+              >
+                Upload File
+              </Button>
+              <Button onClick={uploadHandler} width="50%" colorScheme="green">
+                Post
+              </Button>
+            </Flex>
+          </Box>
         </Box>
         <Box>{renderPosts()}</Box>
       </Container>

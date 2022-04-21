@@ -46,7 +46,6 @@ const Navbar = () => {
       borderBottomColor="gray.200"
       position="sticky"
     >
-      {" "}
       {userSelector.id ? (
         <Flex justifyContent="space-between">
           <Stack spacing={4} direction="row">

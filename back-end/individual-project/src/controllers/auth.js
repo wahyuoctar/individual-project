@@ -43,7 +43,7 @@ const authControllers = {
                 }
             })
 
-            const sessionToken = nanoid(45)
+            const sessionToken = nanoid(64)
 
             await Session.create({
                 token: sessionToken,

@@ -61,8 +61,9 @@ const HomePage = () => {
           location={val?.location}
           imageUrl={val?.image_url}
           id={val?.id}
+          userId={val?.User?.id}
           postDate={val?.createdAt}
-          userId={userSelector.id}
+          isInProfile={val?.User?.id == userSelector.id ? true : false}
           postUserId={val?.user_id}
         />
       );
