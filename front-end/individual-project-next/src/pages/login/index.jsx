@@ -21,6 +21,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { userLogin } from "../../redux/actions/auth";
+import Page from "../../components/Page";
 
 const LoginPage = () => {
   const userSelector = useSelector((state) => state.user);
@@ -63,85 +64,87 @@ const LoginPage = () => {
   }, [userSelector.id]);
 
   return (
-    <Box display="flex" alignItems="center" flexDirection="column">
-      <Box
-        shadow={"dark-lg"}
-        borderColor="blackAlpha.300"
-        margin="10"
-        width="md"
-        borderWidth="thin"
-        padding="2"
-        borderRadius="md"
-      >
-        <Heading color={"dimgrey"} textAlign="center">
-          LOGIN
-        </Heading>
+    <Page title={`Login`}>
+      <Box display="flex" alignItems="center" flexDirection="column">
+        <Box
+          shadow={"dark-lg"}
+          borderColor="blackAlpha.300"
+          margin="10"
+          width="md"
+          borderWidth="thin"
+          padding="2"
+          borderRadius="md"
+        >
+          <Heading color={"dimgrey"} textAlign="center">
+            LOGIN
+          </Heading>
 
-        <FormControl isInvalid={formik.errors.username}>
-          <FormHelperText>{formik.errors.username}</FormHelperText>
-          {/* Input Username */}
-          <Input
-            onChange={(event) =>
-              formik.setFieldValue("username", event.target.value)
-            }
-            mb="4"
-            placeholder="Username"
-            id="inputUsername"
-            value={formik.values.username}
-          />
-        </FormControl>
-
-        <FormControl isInvalid={formik.errors.password}>
-          <FormHelperText>{formik.errors.password}</FormHelperText>
-          {/* Input Password */}
-          <InputGroup>
+          <FormControl isInvalid={formik.errors.username}>
+            <FormHelperText>{formik.errors.username}</FormHelperText>
+            {/* Input Username */}
             <Input
               onChange={(event) =>
-                formik.setFieldValue("password", event.target.value)
+                formik.setFieldValue("username", event.target.value)
               }
-              type={visiblePassword ? "text" : "password"}
               mb="4"
-              placeholder="Password"
-              id="inputPassword"
-              value={formik.values.password}
+              placeholder="Username"
+              id="inputUsername"
+              value={formik.values.username}
             />
-            <InputRightElement
-              children={
-                <Icon
-                  onClick={() => setVisiblePassword(!visiblePassword)}
-                  as={visiblePassword ? IoMdEye : IoMdEyeOff}
-                  sx={{ _hover: { cursor: "pointer" } }}
-                />
-              }
-            />
-          </InputGroup>
-        </FormControl>
+          </FormControl>
 
-        <Center>
-          <Button
-            onClick={formik.handleSubmit}
-            mt="2"
-            mb="4"
-            width="md"
-            colorScheme="facebook"
-          >
-            Login
-          </Button>
-        </Center>
-        <Divider />
+          <FormControl isInvalid={formik.errors.password}>
+            <FormHelperText>{formik.errors.password}</FormHelperText>
+            {/* Input Password */}
+            <InputGroup>
+              <Input
+                onChange={(event) =>
+                  formik.setFieldValue("password", event.target.value)
+                }
+                type={visiblePassword ? "text" : "password"}
+                mb="4"
+                placeholder="Password"
+                id="inputPassword"
+                value={formik.values.password}
+              />
+              <InputRightElement
+                children={
+                  <Icon
+                    onClick={() => setVisiblePassword(!visiblePassword)}
+                    as={visiblePassword ? IoMdEye : IoMdEyeOff}
+                    sx={{ _hover: { cursor: "pointer" } }}
+                  />
+                }
+              />
+            </InputGroup>
+          </FormControl>
 
-        <Center>
-          <Button
-            onClick={() => router.push("/register")}
-            marginY="4"
-            width="md"
-            colorScheme="green"
-          >
-            Register
-          </Button>
-        </Center>
+          <Center>
+            <Button
+              onClick={formik.handleSubmit}
+              mt="2"
+              mb="4"
+              width="md"
+              colorScheme="facebook"
+            >
+              Login
+            </Button>
+          </Center>
+          <Divider />
+
+          <Center>
+            <Button
+              onClick={() => router.push("/register")}
+              marginY="4"
+              width="md"
+              colorScheme="green"
+            >
+              Register
+            </Button>
+          </Center>
+        </Box>
       </Box>
-    </Box>
+    </Page>
   );
 };
 

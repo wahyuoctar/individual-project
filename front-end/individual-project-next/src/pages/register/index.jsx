@@ -20,6 +20,7 @@ import * as Yup from "yup";
 import { axiosInstance } from "../../config/api";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { useSelector } from "react-redux";
+import Page from "../../components/Page";
 
 const RegistrationPage = () => {
   const toast = useToast();
@@ -97,126 +98,128 @@ const RegistrationPage = () => {
   }
 
   return (
-    <Center>
-      <Box
-        borderRadius="md"
-        py="2"
-        mt="2"
-        shadow="dark-lg"
-        width="lg"
-        display="flex"
-        alignItems="center"
-        flexDirection="column"
-      >
-        <Heading color={"cadetblue"} textAlign="center">
-          REGISTER
-        </Heading>
-        <Box width="md">
-          <form>
-            <FormControl isInvalid={formik.errors.fullname}>
-              <FormLabel htmlFor="inputFullname">Fullname</FormLabel>
-              <FormHelperText>{formik.errors.fullname}</FormHelperText>
-              <Input
-                onChange={(event) =>
-                  formik.setFieldValue("fullname", event.target.value)
-                }
-                mb="3"
-                id="inputFullname"
-                value={formik.values.fullname}
-              />
-            </FormControl>
-
-            <FormControl isInvalid={formik.errors.username}>
-              <FormLabel htmlFor="inputUsername">Username</FormLabel>
-              <FormHelperText>{formik.errors.username}</FormHelperText>
-              <Input
-                onChange={(event) =>
-                  formik.setFieldValue("username", event.target.value)
-                }
-                mb="3"
-                id="inputUsername"
-                value={formik.values.username}
-              />
-            </FormControl>
-
-            <FormControl isInvalid={formik.errors.email}>
-              <FormLabel htmlFor="inputEmail">Email</FormLabel>
-              <FormHelperText>{formik.errors.email}</FormHelperText>
-              <Input
-                type="email"
-                onChange={(event) =>
-                  formik.setFieldValue("email", event.target.value)
-                }
-                id="inputEmail"
-                value={formik.values.email}
-              />
-            </FormControl>
-
-            <FormControl isInvalid={formik.errors.password}>
-              <FormLabel htmlFor="inputPassword">Password</FormLabel>
-              <FormHelperText>{formik.errors.password}</FormHelperText>
-              <InputGroup>
+    <Page title={`Register`}>
+      <Center>
+        <Box
+          borderRadius="md"
+          py="2"
+          mt="2"
+          shadow="dark-lg"
+          width="lg"
+          display="flex"
+          alignItems="center"
+          flexDirection="column"
+        >
+          <Heading color={"cadetblue"} textAlign="center">
+            REGISTER
+          </Heading>
+          <Box width="md">
+            <form>
+              <FormControl isInvalid={formik.errors.fullname}>
+                <FormLabel htmlFor="inputFullname">Fullname</FormLabel>
+                <FormHelperText>{formik.errors.fullname}</FormHelperText>
                 <Input
-                  type={visiblePassword ? "text" : "password"}
                   onChange={(event) =>
-                    formik.setFieldValue("password", event.target.value)
+                    formik.setFieldValue("fullname", event.target.value)
                   }
-                  id="inputPassword"
-                  value={formik.values.password}
+                  mb="3"
+                  id="inputFullname"
+                  value={formik.values.fullname}
                 />
-                <InputRightElement
-                  children={
-                    <Icon
-                      onClick={() => setVisiblePassword(!visiblePassword)}
-                      as={visiblePassword ? IoMdEye : IoMdEyeOff}
-                      sx={{ _hover: { cursor: "pointer" } }}
-                    />
-                  }
-                />
-              </InputGroup>
-            </FormControl>
+              </FormControl>
 
-            <FormControl isInvalid={formik.errors.repeatPassword}>
-              <FormLabel htmlFor="inputRepeatPassword">
-                Repeat Password
-              </FormLabel>
-              <FormHelperText>{formik.errors.repeatPassword}</FormHelperText>
-              <InputGroup>
+              <FormControl isInvalid={formik.errors.username}>
+                <FormLabel htmlFor="inputUsername">Username</FormLabel>
+                <FormHelperText>{formik.errors.username}</FormHelperText>
                 <Input
-                  type={visibleRepeatPassword ? "text" : "password"}
                   onChange={(event) =>
-                    formik.setFieldValue("repeatPassword", event.target.value)
+                    formik.setFieldValue("username", event.target.value)
                   }
-                  id="inputRepeatPassword"
-                  value={formik.values.repeatPassword}
+                  mb="3"
+                  id="inputUsername"
+                  value={formik.values.username}
                 />
-                <InputRightElement
-                  children={
-                    <Icon
-                      onClick={() =>
-                        setVisibleRepeatPassword(!visibleRepeatPassword)
-                      }
-                      as={visibleRepeatPassword ? IoMdEye : IoMdEyeOff}
-                      sx={{ _hover: { cursor: "pointer" } }}
-                    />
-                  }
-                />
-              </InputGroup>
-            </FormControl>
+              </FormControl>
 
-            <Button
-              type="submit"
-              width="md"
-              onClick={formik.handleSubmit}
-              mt="2"
-              colorScheme="green"
-            >
-              Register
-            </Button>
-          </form>
+              <FormControl isInvalid={formik.errors.email}>
+                <FormLabel htmlFor="inputEmail">Email</FormLabel>
+                <FormHelperText>{formik.errors.email}</FormHelperText>
+                <Input
+                  type="email"
+                  onChange={(event) =>
+                    formik.setFieldValue("email", event.target.value)
+                  }
+                  id="inputEmail"
+                  value={formik.values.email}
+                />
+              </FormControl>
+
+              <FormControl isInvalid={formik.errors.password}>
+                <FormLabel htmlFor="inputPassword">Password</FormLabel>
+                <FormHelperText>{formik.errors.password}</FormHelperText>
+                <InputGroup>
+                  <Input
+                    type={visiblePassword ? "text" : "password"}
+                    onChange={(event) =>
+                      formik.setFieldValue("password", event.target.value)
+                    }
+                    id="inputPassword"
+                    value={formik.values.password}
+                  />
+                  <InputRightElement
+                    children={
+                      <Icon
+                        onClick={() => setVisiblePassword(!visiblePassword)}
+                        as={visiblePassword ? IoMdEye : IoMdEyeOff}
+                        sx={{ _hover: { cursor: "pointer" } }}
+                      />
+                    }
+                  />
+                </InputGroup>
+              </FormControl>
+
+              <FormControl isInvalid={formik.errors.repeatPassword}>
+                <FormLabel htmlFor="inputRepeatPassword">
+                  Repeat Password
+                </FormLabel>
+                <FormHelperText>{formik.errors.repeatPassword}</FormHelperText>
+                <InputGroup>
+                  <Input
+                    type={visibleRepeatPassword ? "text" : "password"}
+                    onChange={(event) =>
+                      formik.setFieldValue("repeatPassword", event.target.value)
+                    }
+                    id="inputRepeatPassword"
+                    value={formik.values.repeatPassword}
+                  />
+                  <InputRightElement
+                    children={
+                      <Icon
+                        onClick={() =>
+                          setVisibleRepeatPassword(!visibleRepeatPassword)
+                        }
+                        as={visibleRepeatPassword ? IoMdEye : IoMdEyeOff}
+                        sx={{ _hover: { cursor: "pointer" } }}
+                      />
+                    }
+                  />
+                </InputGroup>
+              </FormControl>
+
+              <Button
+                type="submit"
+                width="md"
+                onClick={formik.handleSubmit}
+                mt="2"
+                colorScheme="green"
+              >
+                Register
+              </Button>
+            </form>
+          </Box>
         </Box>
-      </Box>
-    </Center>
+      </Center>
+    </Page>
   );
 };
 

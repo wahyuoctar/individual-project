@@ -17,6 +17,7 @@ import { useFormik } from "formik";
 import { useRouter } from "next/router";
 import { fetchUserData } from "../../redux/actions/auth";
 import requiresAuth from "../../lib/hoc/requiresAuth";
+import Page from "../../components/Page";
 
 const ProfilePage = () => {
   const [posts, setPosts] = useState([]);
@@ -108,89 +109,91 @@ const ProfilePage = () => {
   //   console.log(posts);
 
   return (
-    <Container borderRadius="md" minW="5xl" shadow="dark-lg" marginTop="10">
-      <Box py="4" alignItems="center" display="flex" flexDirection="column">
-        <Avatar src={userData?.ava_pic} size="xl" />
-        <Text mt="2" fontSize="xl" fontWeight="bold">
-          {userData?.fullname}
-        </Text>
-        <Text fontSize="sm" color="gray.500">
-          {userData?.currentCity}
-        </Text>
-
-        <Box display="flex" mt="3">
-          {/* Box for posts */}
-          <Box marginLeft="7">
-            <Text textAlign={"center"} fontWeight="bold">
-              {userData?.posts}
-            </Text>
-            <Text color="gray">Posts</Text>
-          </Box>
-
-          {/* Box for followers */}
-          <Box marginLeft="7">
-            <Text textAlign={"center"} fontWeight="bold">
-              {userData?.followers}
-            </Text>
-            <Text color="gray">Followers</Text>
-          </Box>
-
-          {/* Box for following */}
-          <Box marginLeft="7">
-            <Text textAlign={"center"} fontWeight="bold">
-              {userData?.following}
-            </Text>
-            <Text color="gray">Following</Text>
-          </Box>
-        </Box>
-
-        <Text textAlign="center">{userData?.biography}</Text>
-        <Divider />
-
-        <Box padding="2" my="4" width="xl" borderRadius="md">
-          <Text textShadow="1px 1px #ff0000" as="h3" fontWeight="bold">
-            Please share your moment here!
+    <Page title={`My Profile`}>
+      <Container borderRadius="md" minW="5xl" shadow="dark-lg" marginTop="10">
+        <Box py="4" alignItems="center" display="flex" flexDirection="column">
+          <Avatar src={userData?.ava_pic} size="xl" />
+          <Text mt="2" fontSize="xl" fontWeight="bold">
+            {userData?.fullname}
           </Text>
-          <Input
-            onChange={(event) =>
-              formik.setFieldValue("caption", event.target.value)
-            }
-            placeholder="Caption..."
-            value={formik.values.caption}
-          />
-          <Input
-            onChange={(event) =>
-              formik.setFieldValue("location", event.target.value)
-            }
-            mt={"2"}
-            placeholder="Location..."
-            value={formik.values.location}
-          />
+          <Text fontSize="sm" color="gray.500">
+            {userData?.currentCity}
+          </Text>
 
-          <Flex my="2" justifyContent="space-between">
+          <Box display="flex" mt="3">
+            {/* Box for posts */}
+            <Box marginLeft="7">
+              <Text textAlign={"center"} fontWeight="bold">
+                {userData?.posts}
+              </Text>
+              <Text color="gray">Posts</Text>
+            </Box>
+
+            {/* Box for followers */}
+            <Box marginLeft="7">
+              <Text textAlign={"center"} fontWeight="bold">
+                {userData?.followers}
+              </Text>
+              <Text color="gray">Followers</Text>
+            </Box>
+
+            {/* Box for following */}
+            <Box marginLeft="7">
+              <Text textAlign={"center"} fontWeight="bold">
+                {userData?.following}
+              </Text>
+              <Text color="gray">Following</Text>
+            </Box>
+          </Box>
+
+          <Text textAlign="center">{userData?.biography}</Text>
+          <Divider />
+
+          <Box padding="2" my="4" width="xl" borderRadius="md">
+            <Text textShadow="1px 1px #ff0000" as="h3" fontWeight="bold">
+              Please share your moment here!
+            </Text>
             <Input
-              accept="image/png, image/jpeg, image/jpg"
-              onChange={handleFile}
-              ref={inputFile}
-              type="file"
-              display="none"
+              onChange={(event) =>
+                formik.setFieldValue("caption", event.target.value)
+              }
+              placeholder="Caption..."
+              value={formik.values.caption}
             />
-            <Button
-              onClick={() => inputFile.current.click()}
-              width="50%"
-              mr="1"
-              colorScheme="facebook"
-            >
-              Upload File
-            </Button>
-            <Button onClick={uploadHandler} width="50%" colorScheme="green">
-              Post
-            </Button>
-          </Flex>
+            <Input
+              onChange={(event) =>
+                formik.setFieldValue("location", event.target.value)
+              }
+              mt={"2"}
+              placeholder="Location..."
+              value={formik.values.location}
+            />
+
+            <Flex my="2" justifyContent="space-between">
+              <Input
+                accept="image/png, image/jpeg, image/jpg"
+                onChange={handleFile}
+                ref={inputFile}
+                type="file"
+                display="none"
+              />
+              <Button
+                onClick={() => inputFile.current.click()}
+                width="50%"
+                mr="1"
+                colorScheme="facebook"
+              >
+                Upload File
+              </Button>
+              <Button onClick={uploadHandler} width="50%" colorScheme="green">
+                Post
+              </Button>
+            </Flex>
+          </Box>
         </Box>
-      </Box>
-      <Box>{renderPosts()}</Box>
-    </Container>
+        <Box>{renderPosts()}</Box>
+      </Container>
+    </Page>
   );
 };
 

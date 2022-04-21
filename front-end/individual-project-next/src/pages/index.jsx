@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useSelector } from "react-redux";
+import Page from "../components/Page";
 
 const HomePage = () => {
   const [contentList, setContentList] = useState([]);
@@ -71,27 +72,29 @@ const HomePage = () => {
   }, [page]);
 
   return (
-    <InfiniteScroll
-      dataLength={contentList.length}
-      next={fetchNextPage}
-      hasMore={true}
-      loader={
-        <Center>
-          <Box width="2xs">
-            <Center>
-              <Spinner />
-            </Center>
-            <Text textAlign={"center"}>Loading...</Text>
-          </Box>
-        </Center>
-      }
-      endMessage={<h4>End of Post</h4>}
-      onScroll={false}
-    >
-      <Container borderRadius="md" maxW="5xl" shadow="dark-lg" marginTop="10">
-        {renderContentList()}
-      </Container>
-    </InfiniteScroll>
+    <Page title={`Home`}>
+      <InfiniteScroll
+        dataLength={contentList.length}
+        next={fetchNextPage}
+        hasMore={true}
+        loader={
+          <Center>
+            <Box width="2xs">
+              <Center>
+                <Spinner />
+              </Center>
+              <Text textAlign={"center"}>Loading...</Text>
+            </Box>
+          </Center>
+        }
+        endMessage={<h4>End of Post</h4>}
+        onScroll={false}
+      >
+        <Container borderRadius="md" maxW="5xl" shadow="dark-lg" marginTop="10">
+          {renderContentList()}
+        </Container>
+      </InfiniteScroll>
+    </Page>
   );
 };
 
