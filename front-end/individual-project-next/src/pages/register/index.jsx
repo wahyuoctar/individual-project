@@ -12,6 +12,7 @@ import {
   InputRightElement,
   Text,
   useToast,
+  Divider,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
@@ -21,6 +22,7 @@ import { axiosInstance } from "../../config/api";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { useSelector } from "react-redux";
 import Page from "../../components/Page";
+import Link from "next/link";
 
 const RegistrationPage = () => {
   const toast = useToast();
@@ -215,6 +217,12 @@ const RegistrationPage = () => {
               >
                 Register
               </Button>
+              <Divider />
+              <Link href={`/login`}>
+                <Button mt="2" width="md" colorScheme="blue">
+                  Login
+                </Button>
+              </Link>
             </form>
           </Box>
         </Box>

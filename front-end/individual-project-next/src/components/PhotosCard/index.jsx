@@ -7,13 +7,6 @@ import {
   Icon,
   Flex,
   Divider,
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogContent,
-  AlertDialogOverlay,
-  useDisclosure,
   MenuButton,
   MenuList,
   MenuItem,
@@ -25,7 +18,9 @@ import moment from "moment";
 import { FaRegHeart, FaRegComment } from "react-icons/fa";
 import { BsGripVertical } from "react-icons/bs";
 import { useSelector } from "react-redux";
+import { useRouter } from "next/router";
 import { axiosInstance } from "../../config/api";
+import { AlertDialogExample } from "../AlertDialog";
 
 const PhotosCard = ({
   imageUrl,
@@ -39,51 +34,14 @@ const PhotosCard = ({
   caption,
   postDate,
 }) => {
+  const router = useRouter();
   const toast = useToast();
-
-  const AlertDialogExample = () => {
-    const { isOpen, onOpen, onClose } = useDisclosure();
-    const cancelRef = React.useRef();
-
-    return (
-      <>
-        <Button colorScheme="red" onClick={onOpen}>
-          Delete Post
-        </Button>
-
-        <AlertDialog
-          isOpen={isOpen}
-          leastDestructiveRef={cancelRef}
-          onClose={onClose}
-        >
-          <AlertDialogOverlay>
-            <AlertDialogContent>
-              <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                Delete Post
-              </AlertDialogHeader>
-
-              <AlertDialogBody>
-                Are you sure? You can't undo this action.
-              </AlertDialogBody>
-
-              <AlertDialogFooter>
-                <Button ref={cancelRef} onClick={onClose}>
-                  Cancel
-                </Button>
-                <Button colorScheme="red" onClick={deleteButton} ml={3}>
-                  Delete
-                </Button>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialogOverlay>
-        </AlertDialog>
-      </>
-    );
-  };
 
   const deleteButton = async () => {
     try {
       await axiosInstance.delete("/posts/" + postId);
+      // router.push("/profile");
+      // todos: setelah delete mau nya ngerender tapi pegimane dah
     } catch (error) {
       toast({
         title: "Can't Reach The Server",
@@ -112,11 +70,15 @@ const PhotosCard = ({
         <Flex marginLeft="6" marginTop="2">
           <Box display="flex" flexDirection="column">
             <Box mb="3" paddingX="2" display="flex" alignItems="center">
-              <Avatar src={avaPic} />
+              <Link href={`/profile/${userId}`}>
+                <Avatar src={avaPic} />
+              </Link>
               <Box marginLeft="2">
-                <Text className="username" fontWeight="bold">
-                  {fullName}
-                </Text>
+                <Link href={`/profile/${userId}`}>
+                  <Text className="username" fontWeight="bold">
+                    {fullName}
+                  </Text>
+                </Link>
                 <Text color="gray">{location}</Text>
               </Box>
             </Box>
@@ -172,9 +134,7 @@ const PhotosCard = ({
                     <Link href={`/edit-post/${postId}`}>
                       <MenuItem>Edit Post</MenuItem>
                     </Link>
-                    <MenuItem onClick={AlertDialogExample}>
-                      Delete Post
-                    </MenuItem>
+                    <MenuItem onClick={deleteButton}>Delete Post</MenuItem>
                   </MenuList>
                 </Menu>
               ) : null}

@@ -12,11 +12,13 @@ import {
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useSelector } from "react-redux";
 import Page from "../components/Page";
+import { useRouter } from "next/router";
 
 const HomePage = () => {
   const [contentList, setContentList] = useState([]);
   const [page, setPage] = useState(1);
   const userSelector = useSelector((state) => state.user);
+  const router = useRouter();
 
   const toast = useToast();
 
@@ -68,8 +70,12 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    fetchContentList();
-  }, [page]);
+    if (userSelector.id) {
+      fetchContentList();
+    } else if (!userSelector.id) {
+      router.push("/login");
+    }
+  }, [userSelector.id, page]);
 
   return (
     <Page title={`Home`}>

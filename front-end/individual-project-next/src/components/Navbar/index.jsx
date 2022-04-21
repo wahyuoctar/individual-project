@@ -46,42 +46,45 @@ const Navbar = () => {
       borderBottomColor="gray.200"
       position="sticky"
     >
-      <Flex justifyContent="space-between">
-        <Stack spacing={4} direction="row">
-          <Link href="/">
-            <Button>Home</Button>
-          </Link>
-          {userSelector.id ? (
-            <Link href="/profile">
-              <Button colorScheme="messenger">Profile</Button>
+      {" "}
+      {userSelector.id ? (
+        <Flex justifyContent="space-between">
+          <Stack spacing={4} direction="row">
+            <Link href="/">
+              <Button>Home</Button>
             </Link>
-          ) : null}
-        </Stack>
+            {userSelector.id ? (
+              <Link href="/profile">
+                <Button colorScheme="messenger">Profile</Button>
+              </Link>
+            ) : null}
+          </Stack>
 
-        <Stack spacing={4} direction="row">
-          {userSelector.id ? (
-            <>
-              <Menu>
-                <MenuButton>
-                  <Avatar src={userSelector?.ava_pic} />
-                </MenuButton>
-                <MenuList>
-                  <Link href="/profile/edit-profile">
-                    <MenuItem>Edit My Profile</MenuItem>
-                  </Link>
-                </MenuList>
-              </Menu>
-              <Button onClick={logoutBtnHandler} colorScheme="blackAlpha">
-                Logout
-              </Button>
-            </>
-          ) : (
-            <Link href="/login">
-              <Button colorScheme="teal">Login</Button>
-            </Link>
-          )}
-        </Stack>
-      </Flex>
+          <Stack spacing={4} direction="row">
+            {userSelector.id ? (
+              <>
+                <Menu>
+                  <MenuButton>
+                    <Avatar src={userSelector?.ava_pic} />
+                  </MenuButton>
+                  <MenuList>
+                    <Link href="/profile/edit-profile">
+                      <MenuItem>Edit My Profile</MenuItem>
+                    </Link>
+                  </MenuList>
+                </Menu>
+                <Button onClick={logoutBtnHandler} colorScheme="blackAlpha">
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <Link href="/login">
+                <Button colorScheme="teal">Login</Button>
+              </Link>
+            )}
+          </Stack>
+        </Flex>
+      ) : null}
     </Box>
   );
 };
