@@ -38,15 +38,23 @@ const PhotosCard = ({
 }) => {
   const userSelector = useSelector((state) => state.user);
   const [commentList, setCommentList] = useState([]);
+  const [page, setPage] = useState(1);
   const toast = useToast();
 
   const fetchComments = async () => {
     try {
-      const res = await axiosInstance.get("/posts/" + postId);
+      const res = await axiosInstance.get("/posts/" + postId, {
+        params: {
+          _page: page,
+        },
+      });
 
       console.log(postId);
       console.log(res.data.result);
-      setCommentList(res?.data?.result?.comment);
+      setCommentList((prevComments) => [
+        ...prevComments,
+        ...res?.data?.result?.comment,
+      ]);
     } catch (error) {
       toast({
         title: "Can't Reach The Comment Server",
@@ -84,6 +92,9 @@ const PhotosCard = ({
           <Box display="flex" marginLeft="4" marginRight="2" marginTop="1">
             <Text lineHeight="4">
               <b>{val?.User?.username} </b>
+              <span style={{ color: "gray.400", fontWeight: "lighter" }}>
+                {`(${moment(val?.createdAt).format("MM/DD")})`}{" "}
+              </span>
               {val?.content}
             </Text>
           </Box>
@@ -94,14 +105,36 @@ const PhotosCard = ({
         return (
           <Box display="flex" marginLeft="4" marginRight="2" marginTop="1">
             <Text lineHeight="4">
-              <Link
-                className="username"
-                fontWeight="bold"
-                textDecoration="none"
-                href={`/profile/${userId}`}
-              >
-                {val?.User?.username}{" "}
-              </Link>
+              {val?.user_id == userSelector?.id ? (
+                <>
+                  <Link
+                    className="username"
+                    fontWeight="bold"
+                    textDecoration="none"
+                    href={`/profile`}
+                  >
+                    {val?.User?.username}{" "}
+                  </Link>
+                  <span style={{ color: "gray.400", fontWeight: "lighter" }}>
+                    {`(${moment(val?.createdAt).format("MM/DD")})`}{" "}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <Link
+                    className="username"
+                    fontWeight="bold"
+                    textDecoration="none"
+                    href={`/profile/${val?.user_id}`}
+                  >
+                    {val?.User?.username}{" "}
+                  </Link>
+                  <span style={{ color: "gray.400", fontWeight: "lighter" }}>
+                    {`(${moment(val?.createdAt).format("MM/DD")})`}{" "}
+                  </span>
+                </>
+              )}
+
               {val?.content}
             </Text>
           </Box>
@@ -110,11 +143,15 @@ const PhotosCard = ({
     }
   };
 
+  const viewCommentButton = () => {
+    setPage(page + 1);
+  };
+
   useEffect(() => {
     if (userSelector.id) {
       fetchComments();
     }
-  }, [userSelector.id]);
+  }, [userSelector.id, page]);
 
   return (
     // <Container maxW="5xl" shadow="lg" marginTop="10">
@@ -229,6 +266,11 @@ const PhotosCard = ({
 
         {/* Box Comment */}
         {renderComment()}
+        {commentList.length ? (
+          <Text onClick={viewCommentButton} textAlign="center" marginTop="1">
+            View All Comments
+          </Text>
+        ) : null}
       </Box>
     </Flex>
     // </Container>

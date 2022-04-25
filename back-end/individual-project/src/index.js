@@ -3,7 +3,7 @@ const app = express()
 const dotenv = require("dotenv")
 dotenv.config()
 const cors = require("cors")
-const { userRoutes, postRoutes, authRoutes } = require("./routes")
+const { userRoutes, postRoutes, authRoutes, commentRoutes } = require("./routes")
 const { sequelize } = require("./lib/sequelize")
 sequelize.sync({alter: true})
 
@@ -18,6 +18,7 @@ app.use("/image_url", express.static(`${__dirname}/public/posts`))
 app.use("/users", userRoutes)
 app.use("/posts", postRoutes)
 app.use("/auth", authRoutes)
+app.use("/comments", commentRoutes)
 
 app.listen(PORT, () => {
     console.log(`Listening in PORT: `, PORT);

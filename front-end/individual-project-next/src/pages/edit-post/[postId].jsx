@@ -147,7 +147,7 @@ export async function getServerSideProps(context) {
 
   return {
     props: {
-      photosDetail: res?.data?.result,
+      photosDetail: res?.data?.result?.post,
       //   userData: res?.data?.result[0]?.User,
     },
   };

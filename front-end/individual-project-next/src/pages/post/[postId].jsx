@@ -53,14 +53,35 @@ const UsersPhotosPage = ({ photosDetail, commentList }) => {
       return (
         <Box display="flex" marginLeft="4" marginRight="2" marginTop="1">
           <Text lineHeight="4">
-            <Link
-              className="username"
-              fontWeight="bold"
-              textDecoration="none"
-              href={`/profile/${photosDetail?.user_id}`}
-            >
-              {val?.User?.username}{" "}
-            </Link>
+            {val?.user_id == userSelector?.id ? (
+              <>
+                <Link
+                  className="username"
+                  fontWeight="bold"
+                  textDecoration="none"
+                  href={`/profile`}
+                >
+                  {val?.User?.username}{" "}
+                </Link>
+                <span style={{ color: "gray.400", fontWeight: "lighter" }}>
+                  {`(${moment(val?.createdAt).format("MM/DD")})`}{" "}
+                </span>
+              </>
+            ) : (
+              <>
+                <Link
+                  className="username"
+                  fontWeight="bold"
+                  textDecoration="none"
+                  href={`/profile/${val?.user_id}`}
+                >
+                  {val?.User?.username}{" "}
+                </Link>
+                <span style={{ color: "gray.400", fontWeight: "lighter" }}>
+                  {`(${moment(val?.createdAt).format("MM/DD")})`}{" "}
+                </span>
+              </>
+            )}
             {val?.content}
           </Text>
         </Box>
@@ -160,7 +181,7 @@ const UsersPhotosPage = ({ photosDetail, commentList }) => {
                 </Flex>
 
                 <Text fontSize="sm" fontWeight="bold">
-                  {photosDetail?.likes?.toLocaleString()} likes
+                  {photosDetail?.like_count?.toLocaleString()} likes
                 </Text>
                 <Text>{photosDetail?.caption}</Text>
               </Box>
@@ -169,6 +190,9 @@ const UsersPhotosPage = ({ photosDetail, commentList }) => {
 
             {/* Box Comment */}
             {renderComment()}
+            <Text marginTop="1" textAlign="center">
+              View More Comments
+            </Text>
           </Box>
         </Flex>
       </Container>
