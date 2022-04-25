@@ -19,9 +19,8 @@ import moment from "moment";
 import { FaRegHeart, FaRegComment } from "react-icons/fa";
 import { BsGripVertical } from "react-icons/bs";
 import { useSelector } from "react-redux";
-import { useRouter } from "next/router";
 import { axiosInstance } from "../../config/api";
-import { AlertDialogExample } from "../AlertDialog";
+import { useEffect, useState } from "react";
 
 const PhotosCard = ({
   imageUrl,
@@ -37,7 +36,28 @@ const PhotosCard = ({
   isInDetail = false,
   isInProfile = false,
 }) => {
+  const userSelector = useSelector((state) => state.user);
+  const [commentList, setCommentList] = useState([]);
   const toast = useToast();
+
+  const fetchComments = async () => {
+    try {
+      const res = await axiosInstance.get("/posts/" + postId);
+
+      console.log(postId);
+      console.log(res.data.result);
+      setCommentList(res?.data?.result?.comment);
+    } catch (error) {
+      toast({
+        title: "Can't Reach The Comment Server",
+        description: "Connect The Server",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+  };
 
   const deleteButton = async () => {
     try {
@@ -45,6 +65,7 @@ const PhotosCard = ({
       // router.push("/profile");
       // todos: setelah delete mau nya ngerender tapi pegimane dah
     } catch (error) {
+      console.log(error);
       toast({
         title: "Can't Reach The Server",
         description: "Connect The Server",
@@ -56,10 +77,49 @@ const PhotosCard = ({
     }
   };
 
-  const userSelector = useSelector((state) => state.user);
+  const renderComment = () => {
+    if (isInProfile) {
+      return commentList.map((val) => {
+        return (
+          <Box display="flex" marginLeft="4" marginRight="2" marginTop="1">
+            <Text lineHeight="4">
+              <b>{val?.User?.username} </b>
+              {val?.content}
+            </Text>
+          </Box>
+        );
+      });
+    } else if (!isInProfile) {
+      return commentList.map((val) => {
+        return (
+          <Box display="flex" marginLeft="4" marginRight="2" marginTop="1">
+            <Text lineHeight="4">
+              <Link
+                className="username"
+                fontWeight="bold"
+                textDecoration="none"
+                href={`/profile/${userId}`}
+              >
+                {val?.User?.username}{" "}
+              </Link>
+              {val?.content}
+            </Text>
+          </Box>
+        );
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (userSelector.id) {
+      fetchComments();
+    }
+  }, [userSelector.id]);
+
   return (
     // <Container maxW="5xl" shadow="lg" marginTop="10">
     <Flex mb={"5"}>
+      {/* Box for Post Image */}
       <Box my="5" flex={65}>
         <Stack>
           {isInDetail ? (
@@ -72,9 +132,12 @@ const PhotosCard = ({
         </Stack>
       </Box>
 
+      {/* Box for Post detail */}
       <Box my="5" flex={35}>
-        <Flex marginLeft="6" marginTop="2">
+        {/* Flex for User Detail */}
+        <Flex mx="3" marginTop="2">
           <Box display="flex" flexDirection="column">
+            {/* Box for Avatar, Fullname, Location */}
             <Box mb="3" paddingX="2" display="flex" alignItems="center">
               {isInProfile ? (
                 <Avatar src={avaPic} />
@@ -85,12 +148,12 @@ const PhotosCard = ({
               )}
               <Box marginLeft="2">
                 {isInProfile ? (
-                  <Text className="username" fontWeight="bold">
+                  <Text className="fullname" fontWeight="bold">
                     {fullName}
                   </Text>
                 ) : (
                   <Link textDecoration="none" href={`/profile/${userId}`}>
-                    <Text className="username" fontWeight="bold">
+                    <Text className="fullname" fontWeight="bold">
                       {fullName}
                     </Text>
                   </Link>
@@ -98,7 +161,8 @@ const PhotosCard = ({
                 <Text color="gray">{location}</Text>
               </Box>
             </Box>
-            <Box></Box>
+
+            {/* Flex for icon */}
             <Flex>
               {/* Icon Like */}
               <Icon
@@ -126,7 +190,6 @@ const PhotosCard = ({
                 }}
               ></Icon>
 
-              <Text fontWeight="bold">{likes?.toLocaleString()} likes</Text>
               <Text color="gray.400" fontWeight="hairline" ml={"5"}>
                 ({moment(postDate).format("MM/DD")})
               </Text>
@@ -156,10 +219,16 @@ const PhotosCard = ({
               ) : null}
             </Flex>
 
+            <Text fontSize="sm" fontWeight="bold">
+              {likes?.toLocaleString()} likes
+            </Text>
             <Text>{caption}</Text>
           </Box>
         </Flex>
         <Divider ml={"2"} />
+
+        {/* Box Comment */}
+        {renderComment()}
       </Box>
     </Flex>
     // </Container>

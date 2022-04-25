@@ -20,9 +20,13 @@ const postControllers = {
                 offset: (_page - 1) * _limit,
                 include: [
                     {
-                        model: User
+                        model: User,
+                        
+                    },
+                    {
+                        model: Comment
                     }
-                ]
+                ],
             })
 
             return res.status(200).json({
@@ -170,15 +174,31 @@ const postControllers = {
                 },
                 include: [
                     {
-                        model: User
-                    }
-                ],
+                        model: User,
+                    },
+                {
+                    model: Comment
+                }],
                 
             })
 
+            const findComment = await Comment.findAll({
+                where: {
+                    post_id: postId
+                },
+                include: [
+                    {
+                        model: User
+                    }
+                ]
+            }, )
+
             return res.status(200).json({
                 message: `We Found Post ID: ${postId} !`,
-                result: findPost
+                result: {
+                    post: findPost,
+                    comment: findComment
+                }
             })
         } catch (err) {
             console.log(err);
@@ -236,7 +256,15 @@ const postControllers = {
             const getComments = await Comment.findAll({
                 where: {
                     post_id: postId
-                }
+                },
+                include: [
+                    {
+                        model: User
+                    }
+                ],
+                order: [
+                    ['createdAt', 'DESC']
+                ]
             })
 
             return res.status(200).json({

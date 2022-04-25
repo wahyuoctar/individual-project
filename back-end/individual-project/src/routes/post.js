@@ -27,6 +27,7 @@ router.delete("/:postId", authorizedLoggedInUser, postControllers.deletePost)
 router.get("/:postId", postControllers.getPostById)
 router.get("/user/:userId", postControllers.getPostByUserId)
 
+// Get Comment by PostId
 router.get("/:postId/comments", postControllers.getPostComments)
 router.post("/:postId/comments", postControllers.addPostComment)
 
