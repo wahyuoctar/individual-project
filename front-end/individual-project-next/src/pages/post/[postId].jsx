@@ -208,7 +208,7 @@ export async function getServerSideProps(context) {
   return {
     props: {
       photosDetail: res?.data?.result?.post,
-      commentList: res?.data?.result?.comment,
+      commentList: res?.data?.result?.comment?.rows,
     },
   };
 }

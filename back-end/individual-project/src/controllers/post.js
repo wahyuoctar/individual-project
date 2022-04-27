@@ -189,7 +189,7 @@ const postControllers = {
                 
             })
 
-            const findComment = await Comment.findAll({
+            const findComment = await Comment.findAndCountAll({
                 where: {
                     post_id: postId
                 },
@@ -202,7 +202,8 @@ const postControllers = {
                     {
                         model: User
                     }
-                ]
+                ],
+                distinct: true
             }, )
 
             return res.status(200).json({

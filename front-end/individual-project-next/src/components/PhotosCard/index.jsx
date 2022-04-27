@@ -39,21 +39,24 @@ const PhotosCard = ({
   const userSelector = useSelector((state) => state.user);
   const [commentList, setCommentList] = useState([]);
   const [page, setPage] = useState(1);
+  const [count, setCount] = useState(0);
   const toast = useToast();
+
+  const commentLimit = 5;
 
   const fetchComments = async () => {
     try {
       const res = await axiosInstance.get("/posts/" + postId, {
         params: {
           _page: page,
+          _limit: commentLimit,
         },
       });
 
-      console.log(postId);
-      console.log(res.data.result);
+      setCount(res?.data?.result?.comment?.count);
       setCommentList((prevComments) => [
         ...prevComments,
-        ...res?.data?.result?.comment,
+        ...res?.data?.result?.comment?.rows,
       ]);
     } catch (error) {
       toast({
@@ -266,8 +269,18 @@ const PhotosCard = ({
 
         {/* Box Comment */}
         {renderComment()}
-        {commentList.length ? (
-          <Text onClick={viewCommentButton} textAlign="center" marginTop="1">
+        {(page * commentLimit) % count === page * commentLimit ? (
+          <Text
+            sx={{
+              _hover: {
+                cursor: "pointer",
+                color: "blue",
+              },
+            }}
+            onClick={viewCommentButton}
+            textAlign="center"
+            marginTop="1"
+          >
             View All Comments
           </Text>
         ) : null}
