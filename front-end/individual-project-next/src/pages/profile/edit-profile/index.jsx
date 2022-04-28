@@ -77,7 +77,7 @@ const EditProfilePage = () => {
   const formik = useFormik({
     initialValues: {
       fullname: `${userSelector?.fullname}`,
-      username: `${userSelector?.username}`,
+      username: ``,
       biography: `${userSelector?.biography}`,
       current_city: `${userSelector?.current_city}`,
     },
@@ -152,7 +152,7 @@ const EditProfilePage = () => {
           my="4"
         />
         <Input
-          placeholder="Username"
+          placeholder={`${userData?.username}`}
           onChange={(event) =>
             formik.setFieldValue("username", event.target.value)
           }

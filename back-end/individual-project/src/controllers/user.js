@@ -108,7 +108,7 @@ const userControllers = {
                 fullname,
                 biography,
                 username,
-                ava_pic: `${uploadFileDomain}/${filePath}/${filename}`,
+                ava_pic: `${uploadFileDomain}/${filePath}/${filename}` || findUser.ava_pic,
                 current_city
             }, {
                 where: {
