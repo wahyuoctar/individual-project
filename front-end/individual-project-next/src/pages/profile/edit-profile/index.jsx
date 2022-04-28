@@ -49,11 +49,18 @@ const EditProfilePage = () => {
     const formData = new FormData();
     const { fullname, username, biography, current_city } = formik.values;
 
+    if (!formik.values.username) {
+      formik.values.username = userData.username;
+    }
+
     formData.append("fullname", fullname);
     formData.append("username", username);
     formData.append("biography", biography);
     formData.append("current_city", current_city);
     formData.append("ava_pic_file", selectedFile);
+    fetchUser();
+
+    router.push("/");
 
     try {
       await axiosInstance.patch("/users/" + userData.id, formData);

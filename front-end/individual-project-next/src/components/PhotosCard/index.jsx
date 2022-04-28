@@ -13,6 +13,7 @@ import {
   Menu,
   useToast,
   Link,
+  Input,
 } from "@chakra-ui/react";
 // import Link from "next/link";
 import moment from "moment";
@@ -284,6 +285,8 @@ const PhotosCard = ({
             View All Comments
           </Text>
         ) : null}
+
+        <Input mt="1" ml="2" />
       </Box>
     </Flex>
     // </Container>

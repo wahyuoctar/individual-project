@@ -119,6 +119,7 @@ const ProfilePage = () => {
             followers={userSelector?.followers}
             following={userSelector?.following}
             posts={userSelector?.posts}
+            username={userSelector?.username}
           />
           <Divider />
           <Box padding="2" my="4" width="xl" borderRadius="md">

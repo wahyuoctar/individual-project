@@ -24,6 +24,7 @@ const Profile = ({
   following,
   biography,
   currentCity,
+  username,
 }) => {
   const userSelector = useSelector((state) => state.user);
   const authSelector = useSelector((state) => state.auth);
@@ -43,6 +44,9 @@ const Profile = ({
       <Avatar src={avaPic} size="xl" />
       <Text mt="2" fontSize="xl" fontWeight="bold">
         {fullName}
+      </Text>
+      <Text fontSize="medium" color="gray.500">
+        @{username}
       </Text>
       <Text fontSize="sm" color="gray.500">
         {currentCity}

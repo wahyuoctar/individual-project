@@ -17,6 +17,7 @@ import { useRouter } from "next/router";
 const HomePage = () => {
   const [contentList, setContentList] = useState([]);
   const [page, setPage] = useState(1);
+  const [count, setCount] = useState(0);
   const userSelector = useSelector((state) => state.user);
   const router = useRouter();
 
@@ -32,7 +33,8 @@ const HomePage = () => {
           _page: page,
         },
       });
-      setContentList((prevPosts) => [...prevPosts, ...res.data.result]);
+      setCount(res.data.result.count);
+      setContentList((prevPosts) => [...prevPosts, ...res.data.result.rows]);
     } catch (error) {
       toast({
         title: "Can't Reach The Server",
@@ -83,7 +85,7 @@ const HomePage = () => {
       <InfiniteScroll
         dataLength={contentList.length}
         next={fetchNextPage}
-        hasMore={true}
+        hasMore={(page * limitPage) % count === page * limitPage ? true : false}
         loader={
           <Center>
             <Box width="2xs">

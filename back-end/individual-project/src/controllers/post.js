@@ -9,7 +9,7 @@ const postControllers = {
             delete req.query._limit
             delete req.query._page
 
-            const findAllPosts = await Post.findAll({
+            const findAllPosts = await Post.findAndCountAll({
                 where: {
                     ...req.query
                 },
@@ -30,6 +30,8 @@ const postControllers = {
                         ]
                     }
                 ],
+                distinct: true
+
             })
 
             return res.status(200).json({

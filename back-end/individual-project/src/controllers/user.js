@@ -101,25 +101,47 @@ const userControllers = {
             // Variable variable yg berfungsi untuk nama file pada avatar yg diupload
             const uploadFileDomain = process.env.UPLOAD_FILE_DOMAIN
             const filePath = "ava_pics"
-            const { filename} = req.file
+            const filename = req.file
 
             // todo: edit foto, tapi file pada public ditimpa
-            const editedUser = await User.update({
-                fullname,
-                biography,
-                username,
-                ava_pic: `${uploadFileDomain}/${filePath}/${filename}` || findUser.ava_pic,
-                current_city
-            }, {
-                where: {
-                    id: userId
-                }
-            })
+            if (filename) {
+                const editedUser = await User.update({
+                    fullname,
+                    biography,
+                    username,
+                    ava_pic: `${uploadFileDomain}/${filePath}/${filename}`,
+                    current_city
+                }, {
+                    where: {
+                        id: userId
+                    }
+                })
+    
+                return res.status(200).json({
+                    message: "User Edited",
+                    result: editedUser
+                })
+            }
+            else if (!filename) {
+                const editedUser = await User.update({
+                    fullname,
+                    biography,
+                    username,
+                    ava_pic: `${findUser.ava_pic}`,
+                    current_city
+                }, {
+                    where: {
+                        id: userId
+                    }
+                })
+    
+               return res.status(200).json({
+                    message: "User Edited",
+                    result: editedUser
+                })    
+            }
 
-            res.status(200).json({
-                message: "User Edited",
-                result: editedUser
-            })
+            
             
         } catch (err) {
             console.log(err);
