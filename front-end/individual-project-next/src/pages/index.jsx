@@ -59,7 +59,6 @@ const HomePage = () => {
           fullName={val?.User?.fullname || "Fullname"}
           avaPic={val?.User?.ava_pic}
           caption={val?.caption}
-          likes={val?.like_count}
           location={val?.location}
           imageUrl={val?.image_url}
           id={val?.id}
@@ -78,7 +77,7 @@ const HomePage = () => {
     } else if (!userSelector.id) {
       router.push("/login");
     }
-  }, [userSelector.id, page]);
+  }, [userSelector.id, page, contentList.like_count]);
 
   return (
     <Page title={`Home`}>

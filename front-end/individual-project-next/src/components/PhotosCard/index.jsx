@@ -20,7 +20,7 @@ import {
 } from "@chakra-ui/react";
 // import Link from "next/link";
 import moment from "moment";
-import { FaRegHeart, FaRegComment } from "react-icons/fa";
+import { FaRegHeart, FaRegComment, FaHeart } from "react-icons/fa";
 import { BsGripVertical } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import { axiosInstance } from "../../config/api";
@@ -44,9 +44,11 @@ const PhotosCard = ({
 }) => {
   const userSelector = useSelector((state) => state.user);
   const [commentList, setCommentList] = useState([]);
+  const [postLikes, setPostLikes] = useState({});
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
   const [viewComment, setViewComment] = useState(false);
+  const [likePost, setLikePost] = useState(false);
   const toast = useToast();
 
   const commentLimit = 5;
@@ -93,6 +95,7 @@ const PhotosCard = ({
         },
       });
 
+      setPostLikes(res?.data?.result?.post?.like_count);
       setCount(res?.data?.result?.comment?.count);
       setCommentList((prevComments) => [
         ...prevComments,
@@ -101,6 +104,29 @@ const PhotosCard = ({
     } catch (error) {
       toast({
         title: "Can't Reach The Comment Server",
+        description: "Connect The Server",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+  };
+
+  const fetchLike = async () => {
+    try {
+      const res = await axiosInstance.get("/likes/post/" + postId);
+
+      console.log(res?.data?.result);
+
+      if (!res?.data?.result) {
+        return setLikePost(false);
+      } else if (res?.data?.result) {
+        return setLikePost(true);
+      }
+    } catch (error) {
+      toast({
+        title: "Can't Reach Like Server",
         description: "Connect The Server",
         status: "error",
         duration: 3000,
@@ -194,9 +220,46 @@ const PhotosCard = ({
     setViewComment(!viewComment);
   };
 
+  const likeButton = async () => {
+    try {
+      await axiosInstance.post("/likes/post/" + postId);
+
+      setLikePost(true);
+      fetchComments();
+    } catch (error) {
+      toast({
+        title: "Can't Reach Like Server",
+        description: "Connect The Server",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+  };
+
+  const unlikeButton = async () => {
+    try {
+      await axiosInstance.delete("/likes/post/" + postId);
+
+      setLikePost(false);
+      fetchComments();
+    } catch (error) {
+      toast({
+        title: "Can't Reach Like Server",
+        description: "Connect The Server",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+  };
+
   useEffect(() => {
     if (userSelector.id) {
       fetchComments();
+      fetchLike();
     }
   }, [userSelector.id, page]);
 
@@ -249,17 +312,33 @@ const PhotosCard = ({
             {/* Flex for icon */}
             <Flex>
               {/* Icon Like */}
-              <Icon
-                boxSize="6"
-                marginRight="4"
-                as={FaRegHeart}
-                sx={{
-                  _hover: {
-                    cursor: "pointer",
-                    color: "blue",
-                  },
-                }}
-              ></Icon>
+              {likePost ? (
+                <Icon
+                  boxSize="6"
+                  onClick={unlikeButton}
+                  marginRight="4"
+                  as={FaHeart}
+                  sx={{
+                    _hover: {
+                      cursor: "pointer",
+                      color: "blue",
+                    },
+                  }}
+                ></Icon>
+              ) : (
+                <Icon
+                  boxSize="6"
+                  onClick={likeButton}
+                  marginRight="4"
+                  as={FaRegHeart}
+                  sx={{
+                    _hover: {
+                      cursor: "pointer",
+                      color: "blue",
+                    },
+                  }}
+                ></Icon>
+              )}
 
               {/* Icon Comment */}
               <Icon
@@ -305,7 +384,7 @@ const PhotosCard = ({
             </Flex>
 
             <Text fontSize="sm" fontWeight="bold">
-              {likes?.toLocaleString()} likes
+              {postLikes?.toLocaleString()} likes
             </Text>
             <Text>{caption}</Text>
           </Box>

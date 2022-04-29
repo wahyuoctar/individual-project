@@ -4,19 +4,19 @@ const likeControllers = {
     getPostLike: async(req, res) => {
         try {
             const {postId} = req.params
+            const user_id = req.token.user_id
+            // const {user_id} =req.body
 
-            const findLike = await Like.findAll({
+            const findLike = await Like.findOne({
                 where: {
-                    post_id: postId
-                },
-                include: [
-                    {model : User}
-                ]
+                    post_id: postId,
+                    user_id
+                }
             })
 
             if (!findLike) {
                 return res.status(400).json({
-                    message: "Can't find Post"
+                    message: "Can't find Like"
                 })
             }
 
@@ -35,8 +35,8 @@ const likeControllers = {
     likePost: async(req, res) => {
         try {
             const {postId} = req.params
-            const {user_id} = req.body
-            // const user_id = req.token.user_id
+            // const {user_id} = req.body
+            const user_id = req.token.user_id
 
             const findPost = await Post.findAll({
                 where: {
@@ -93,8 +93,8 @@ const likeControllers = {
     unlikePost: async(req, res) => {
         try {
             const {postId} = req.params
-            const {user_id} = req.body
-            // const user_id = req.token.user_id
+            // const {user_id} = req.body
+            const user_id = req.token.user_id
 
             const findPost = await Post.findAll({
                 where: {

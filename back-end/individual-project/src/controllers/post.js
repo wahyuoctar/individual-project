@@ -1,4 +1,4 @@
-const { Post, User, Comment } = require("../lib/sequelize")
+const { Post, User, Comment, Like } = require("../lib/sequelize")
 const fs = require("fs")
 
 const postControllers = {
@@ -28,6 +28,8 @@ const postControllers = {
                         order: [
                             ['createdAt', 'DESC']
                         ]
+                    }, {
+                        model: Like
                     }
                 ],
                 distinct: true
