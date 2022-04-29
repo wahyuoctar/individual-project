@@ -20,12 +20,11 @@ import {
 } from "@chakra-ui/react";
 // import Link from "next/link";
 import moment from "moment";
-import { FaRegHeart, FaRegComment } from "react-icons/fa";
+import { FaRegHeart, FaRegComment, FaHeart } from "react-icons/fa";
 import { BsGripVertical } from "react-icons/bs";
 import { axiosInstance } from "../../config/api";
 import { useEffect, useState } from "react";
 import { Container } from "@chakra-ui/react";
-import PhotosCard from "../../components/PhotosCard";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import Page from "../../components/Page";
@@ -35,11 +34,13 @@ import * as Yup from "yup";
 const UsersPhotosPage = ({ photosDetail, commentList, count }) => {
   const [userComments, setUserComments] = useState([]);
   const userSelector = useSelector((state) => state.user);
-  const commentLimit = 5;
   const [viewComment, setViewComment] = useState(false);
   const [page, setPage] = useState(1);
-
   const toast = useToast();
+  const [postLikes, setPostLikes] = useState({});
+  const [likePost, setLikePost] = useState(false);
+
+  const commentLimit = 5;
 
   const deleteButton = async () => {
     try {
@@ -167,9 +168,76 @@ const UsersPhotosPage = ({ photosDetail, commentList, count }) => {
     });
   };
 
+  const fetchLike = async () => {
+    try {
+      const res = await axiosInstance.get("/likes/post/" + photosDetail?.id);
+
+      const res2 = await axiosInstance.get("/posts/" + photosDetail?.id, {
+        params: {
+          _page: page,
+          _limit: commentLimit,
+        },
+      });
+
+      setPostLikes(res2?.data?.result?.post?.like_count);
+
+      if (!res?.data?.result) {
+        return setLikePost(false);
+      } else if (res?.data?.result) {
+        return setLikePost(true);
+      }
+    } catch (error) {
+      toast({
+        title: "Can't Reach Like Server",
+        description: "Connect The Server",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+  };
+
+  const likeButton = async () => {
+    try {
+      await axiosInstance.post("/likes/post/" + photosDetail?.id);
+
+      setLikePost(true);
+      fetchLike();
+    } catch (error) {
+      toast({
+        title: "Can't Reach Like Server",
+        description: "Connect The Server",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+  };
+
+  const unlikeButton = async () => {
+    try {
+      await axiosInstance.delete("/likes/post/" + photosDetail?.id);
+
+      setLikePost(false);
+      fetchLike();
+    } catch (error) {
+      toast({
+        title: "Can't Reach Like Server",
+        description: "Connect The Server",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+  };
+
   useEffect(() => {
     if (userSelector.id) {
       fetchComments();
+      fetchLike();
     }
   }, [userSelector.id, page]);
 
@@ -227,17 +295,33 @@ const UsersPhotosPage = ({ photosDetail, commentList, count }) => {
                 {/* Flex for icon */}
                 <Flex>
                   {/* Icon Like */}
-                  <Icon
-                    boxSize="6"
-                    marginRight="4"
-                    as={FaRegHeart}
-                    sx={{
-                      _hover: {
-                        cursor: "pointer",
-                        color: "blue",
-                      },
-                    }}
-                  ></Icon>
+                  {likePost ? (
+                    <Icon
+                      boxSize="6"
+                      onClick={unlikeButton}
+                      marginRight="4"
+                      as={FaHeart}
+                      sx={{
+                        _hover: {
+                          cursor: "pointer",
+                          color: "blue",
+                        },
+                      }}
+                    ></Icon>
+                  ) : (
+                    <Icon
+                      boxSize="6"
+                      onClick={likeButton}
+                      marginRight="4"
+                      as={FaRegHeart}
+                      sx={{
+                        _hover: {
+                          cursor: "pointer",
+                          color: "blue",
+                        },
+                      }}
+                    ></Icon>
+                  )}
 
                   {/* Icon Comment */}
                   <Icon
@@ -283,7 +367,7 @@ const UsersPhotosPage = ({ photosDetail, commentList, count }) => {
                 </Flex>
 
                 <Text fontSize="sm" fontWeight="bold">
-                  {photosDetail?.like_count?.toLocaleString()} likes
+                  {postLikes?.toLocaleString()} likes
                 </Text>
                 <Text>{photosDetail?.caption}</Text>
               </Box>

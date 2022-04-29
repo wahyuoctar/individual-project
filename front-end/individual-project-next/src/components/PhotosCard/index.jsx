@@ -44,12 +44,12 @@ const PhotosCard = ({
 }) => {
   const userSelector = useSelector((state) => state.user);
   const [commentList, setCommentList] = useState([]);
-  const [postLikes, setPostLikes] = useState({});
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
   const [viewComment, setViewComment] = useState(false);
-  const [likePost, setLikePost] = useState(false);
   const toast = useToast();
+  const [postLikes, setPostLikes] = useState({});
+  const [likePost, setLikePost] = useState(false);
 
   const commentLimit = 5;
 
@@ -95,7 +95,6 @@ const PhotosCard = ({
         },
       });
 
-      setPostLikes(res?.data?.result?.post?.like_count);
       setCount(res?.data?.result?.comment?.count);
       setCommentList((prevComments) => [
         ...prevComments,
@@ -104,29 +103,6 @@ const PhotosCard = ({
     } catch (error) {
       toast({
         title: "Can't Reach The Comment Server",
-        description: "Connect The Server",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-        position: "top",
-      });
-    }
-  };
-
-  const fetchLike = async () => {
-    try {
-      const res = await axiosInstance.get("/likes/post/" + postId);
-
-      console.log(res?.data?.result);
-
-      if (!res?.data?.result) {
-        return setLikePost(false);
-      } else if (res?.data?.result) {
-        return setLikePost(true);
-      }
-    } catch (error) {
-      toast({
-        title: "Can't Reach Like Server",
         description: "Connect The Server",
         status: "error",
         duration: 3000,
@@ -220,12 +196,42 @@ const PhotosCard = ({
     setViewComment(!viewComment);
   };
 
+  const fetchLike = async () => {
+    try {
+      const res = await axiosInstance.get("/likes/post/" + postId);
+
+      const res2 = await axiosInstance.get("/posts/" + postId, {
+        params: {
+          _page: page,
+          _limit: commentLimit,
+        },
+      });
+
+      setPostLikes(res2?.data?.result?.post?.like_count);
+
+      if (!res?.data?.result) {
+        return setLikePost(false);
+      } else if (res?.data?.result) {
+        return setLikePost(true);
+      }
+    } catch (error) {
+      toast({
+        title: "Can't Reach Like Server",
+        description: "Connect The Server",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+  };
+
   const likeButton = async () => {
     try {
       await axiosInstance.post("/likes/post/" + postId);
 
       setLikePost(true);
-      fetchComments();
+      fetchLike();
     } catch (error) {
       toast({
         title: "Can't Reach Like Server",
@@ -243,7 +249,7 @@ const PhotosCard = ({
       await axiosInstance.delete("/likes/post/" + postId);
 
       setLikePost(false);
-      fetchComments();
+      fetchLike();
     } catch (error) {
       toast({
         title: "Can't Reach Like Server",
