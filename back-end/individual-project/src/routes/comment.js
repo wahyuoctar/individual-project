@@ -2,7 +2,6 @@ const commentControllers = require("../controllers/comment")
 
 const router = require("express").Router()
 
-router.post("/post/:postId")
 
 // Get Comment by PostId
 router.get("/post/:postId", commentControllers.getPostComments)

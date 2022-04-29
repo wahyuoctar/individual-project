@@ -14,6 +14,9 @@ import {
   useToast,
   Link,
   Input,
+  Button,
+  FormControl,
+  FormHelperText,
 } from "@chakra-ui/react";
 // import Link from "next/link";
 import moment from "moment";
@@ -22,6 +25,8 @@ import { BsGripVertical } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import { axiosInstance } from "../../config/api";
 import { useEffect, useState } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const PhotosCard = ({
   imageUrl,
@@ -41,9 +46,43 @@ const PhotosCard = ({
   const [commentList, setCommentList] = useState([]);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
+  const [viewComment, setViewComment] = useState(false);
   const toast = useToast();
 
   const commentLimit = 5;
+
+  const formik = useFormik({
+    initialValues: {
+      content: "",
+    },
+    validateOnChange: true,
+    onSubmit: async (values) => {
+      try {
+        await axiosInstance.post("/comments/post/" + postId, {
+          post_id: postId,
+          user_id: userSelector.id,
+          content: values.content,
+        });
+
+        formik.setFieldValue("content", "");
+        fetchComments();
+        renderComment();
+        setViewComment(false);
+      } catch (error) {
+        toast({
+          title: "Can't Add a Comment",
+          description: "Connect The Server",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+      }
+    },
+    validationSchema: Yup.object().shape({
+      content: Yup.string().max(300, "You've reached Max Character"),
+    }),
+  });
 
   const fetchComments = async () => {
     try {
@@ -151,6 +190,10 @@ const PhotosCard = ({
     setPage(page + 1);
   };
 
+  const hideCommentBtn = () => {
+    setViewComment(!viewComment);
+  };
+
   useEffect(() => {
     if (userSelector.id) {
       fetchComments();
@@ -223,6 +266,7 @@ const PhotosCard = ({
                 boxSize="6"
                 marginRight="4"
                 as={FaRegComment}
+                onClick={hideCommentBtn}
                 sx={{
                   _hover: {
                     cursor: "pointer",
@@ -286,7 +330,23 @@ const PhotosCard = ({
           </Text>
         ) : null}
 
-        <Input mt="1" ml="2" />
+        {viewComment ? (
+          <FormControl mt="3" ml="2" isInvalid={formik.errors.content}>
+            <FormHelperText>{formik.errors.content}</FormHelperText>
+            <Flex>
+              <Input
+                onChange={(event) =>
+                  formik.setFieldValue("content", event.target.value)
+                }
+                value={formik.values.content}
+                placeholder={"Add a comment ..."}
+              />
+              <Button onClick={formik.handleSubmit} colorScheme="green">
+                Send
+              </Button>
+            </Flex>
+          </FormControl>
+        ) : null}
       </Box>
     </Flex>
     // </Container>
