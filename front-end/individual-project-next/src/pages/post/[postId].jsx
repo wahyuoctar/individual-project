@@ -13,6 +13,10 @@ import {
   Menu,
   useToast,
   Link,
+  FormControl,
+  FormHelperText,
+  Input,
+  Button,
 } from "@chakra-ui/react";
 // import Link from "next/link";
 import moment from "moment";
@@ -25,9 +29,16 @@ import PhotosCard from "../../components/PhotosCard";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import Page from "../../components/Page";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
-const UsersPhotosPage = ({ photosDetail, commentList }) => {
+const UsersPhotosPage = ({ photosDetail, commentList, count }) => {
+  const [userComments, setUserComments] = useState([]);
   const userSelector = useSelector((state) => state.user);
+  const commentLimit = 5;
+  const [viewComment, setViewComment] = useState(false);
+  const [page, setPage] = useState(1);
+
   const toast = useToast();
 
   const deleteButton = async () => {
@@ -48,8 +59,75 @@ const UsersPhotosPage = ({ photosDetail, commentList }) => {
     }
   };
 
+  const formik = useFormik({
+    initialValues: {
+      content: "",
+    },
+    validateOnChange: true,
+    onSubmit: async (values) => {
+      try {
+        await axiosInstance.post("/comments/post/" + photosDetail?.id, {
+          post_id: photosDetail?.id,
+          user_id: userSelector.id,
+          content: values.content,
+        });
+
+        formik.setFieldValue("content", "");
+        fetchComments();
+        renderComment();
+        setViewComment(false);
+      } catch (error) {
+        toast({
+          title: "Can't Add a Comment",
+          description: "Connect The Server",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+      }
+    },
+    validationSchema: Yup.object().shape({
+      content: Yup.string().max(300, "You've reached Max Character"),
+    }),
+  });
+
+  const fetchComments = async () => {
+    try {
+      const res = await axiosInstance.get("/posts/" + photosDetail?.id, {
+        params: {
+          _page: page,
+          _limit: commentLimit,
+        },
+      });
+
+      setUserComments((prevComments) => [
+        ...prevComments,
+        ...res?.data?.result?.comment?.rows,
+      ]);
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Can't Reach The Comment Server",
+        description: "Connect The Server",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+  };
+
+  const viewCommentButton = () => {
+    setPage(page + 1);
+  };
+
+  const hideCommentBtn = () => {
+    setViewComment(!viewComment);
+  };
+
   const renderComment = () => {
-    return commentList.map((val) => {
+    return userComments.map((val) => {
       return (
         <Box display="flex" marginLeft="4" marginRight="2" marginTop="1">
           <Text lineHeight="4">
@@ -88,6 +166,12 @@ const UsersPhotosPage = ({ photosDetail, commentList }) => {
       );
     });
   };
+
+  useEffect(() => {
+    if (userSelector.id) {
+      fetchComments();
+    }
+  }, [userSelector.id, page]);
 
   return (
     <Page title={`${photosDetail?.User?.fullname}'s Post`}>
@@ -140,6 +224,7 @@ const UsersPhotosPage = ({ photosDetail, commentList }) => {
 
                   {/* Icon Comment */}
                   <Icon
+                    onClick={hideCommentBtn}
                     boxSize="6"
                     marginRight="4"
                     as={FaRegComment}
@@ -190,9 +275,39 @@ const UsersPhotosPage = ({ photosDetail, commentList }) => {
 
             {/* Box Comment */}
             {renderComment()}
-            <Text marginTop="1" textAlign="center">
-              View More Comments
-            </Text>
+            {(page * commentLimit) % count === page * commentLimit ? (
+              <Text
+                sx={{
+                  _hover: {
+                    cursor: "pointer",
+                    color: "blue",
+                  },
+                }}
+                onClick={viewCommentButton}
+                textAlign="center"
+                marginTop="1"
+              >
+                View All Comments
+              </Text>
+            ) : null}
+
+            {viewComment ? (
+              <FormControl mt="3" ml="2" isInvalid={formik.errors.content}>
+                <FormHelperText>{formik.errors.content}</FormHelperText>
+                <Flex>
+                  <Input
+                    onChange={(event) =>
+                      formik.setFieldValue("content", event.target.value)
+                    }
+                    value={formik.values.content}
+                    placeholder={"Add a comment ..."}
+                  />
+                  <Button onClick={formik.handleSubmit} colorScheme="green">
+                    Send
+                  </Button>
+                </Flex>
+              </FormControl>
+            ) : null}
           </Box>
         </Flex>
       </Container>
@@ -202,13 +317,20 @@ const UsersPhotosPage = ({ photosDetail, commentList }) => {
 
 export async function getServerSideProps(context) {
   const { postId } = context.params;
+  const limitComment = 5;
 
-  const res = await axios.get(`http://localhost:2000/posts/${postId}`);
+  const res = await axios.get(`http://localhost:2000/posts/${postId}`, {
+    params: {
+      _page: 1,
+      _limit: limitComment,
+    },
+  });
 
   return {
     props: {
       photosDetail: res?.data?.result?.post,
       commentList: res?.data?.result?.comment?.rows,
+      count: res?.data?.result?.comment?.count,
     },
   };
 }
