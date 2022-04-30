@@ -14,11 +14,11 @@ const likeControllers = {
                 }
             })
 
-            if (!findLike) {
-                return res.status(400).json({
-                    message: "Can't find Like"
-                })
-            }
+            // if (!findLike) {
+            //     return res.status(400).json({
+            //         message: "Can't find Like"
+            //     })
+            // }
 
             return res.status(200).json({
                 message: "Find Successfully!",

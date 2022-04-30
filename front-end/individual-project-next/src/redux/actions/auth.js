@@ -30,8 +30,8 @@ export function userLogin (values, setSubmitting)  {
       dispatch({
         type: network_types.NETWORK_ERROR,
         payload: {
-          title: "Login Failed",
-          description: err.message
+          title: "Wrong username or password",
+          description: err?.data?.message
         }
       })
       setSubmitting(false)

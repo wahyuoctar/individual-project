@@ -18,7 +18,6 @@ import {
   Input,
   Button,
 } from "@chakra-ui/react";
-// import Link from "next/link";
 import moment from "moment";
 import { FaRegHeart, FaRegComment, FaHeart } from "react-icons/fa";
 import { BsGripVertical } from "react-icons/bs";

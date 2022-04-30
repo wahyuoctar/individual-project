@@ -6,12 +6,15 @@ import {
   Flex,
   Container,
   Box,
+  Center,
+  Icon,
 } from "@chakra-ui/react";
 import { useRef, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { axiosInstance } from "../../config/api";
 import PhotosCard from "../../components/PhotosCard";
 import { useFormik } from "formik";
+import { ImFilePicture } from "react-icons/im";
 
 import { fetchUserData } from "../../redux/actions/auth";
 import requiresAuth from "../../lib/hoc/requiresAuth";
@@ -122,49 +125,65 @@ const ProfilePage = () => {
             username={userSelector?.username}
           />
           <Divider />
-          <Box padding="2" my="4" width="xl" borderRadius="md">
-            <Text textShadow="1px 1px #ff0000" as="h3" fontWeight="bold">
-              Please share your moment here!
-            </Text>
-            <Input
-              onChange={(event) =>
-                formik.setFieldValue("caption", event.target.value)
-              }
-              placeholder="Caption..."
-              value={formik.values.caption}
-            />
-            <Input
-              onChange={(event) =>
-                formik.setFieldValue("location", event.target.value)
-              }
-              mt={"2"}
-              placeholder="Location..."
-              value={formik.values.location}
-            />
-
-            <Flex my="2" justifyContent="space-between">
+          {userSelector.is_verified ? (
+            <Box padding="2" my="4" width="xl" borderRadius="md">
+              <Text textShadow="1px 1px #ff0000" as="h3" fontWeight="bold">
+                Please share your moment here!
+              </Text>
               <Input
-                accept="image/png, image/jpeg, image/jpg"
-                onChange={handleFile}
-                ref={inputFile}
-                type="file"
-                display="none"
+                onChange={(event) =>
+                  formik.setFieldValue("caption", event.target.value)
+                }
+                placeholder="Caption..."
+                value={formik.values.caption}
               />
-              <Button
-                onClick={() => inputFile.current.click()}
-                width="50%"
-                mr="1"
-                colorScheme="facebook"
-              >
-                Upload File
-              </Button>
-              <Button onClick={uploadHandler} width="50%" colorScheme="green">
-                Post
-              </Button>
-            </Flex>
-          </Box>
+              <Input
+                onChange={(event) =>
+                  formik.setFieldValue("location", event.target.value)
+                }
+                mt={"2"}
+                placeholder="Location..."
+                value={formik.values.location}
+              />
+
+              <Flex my="2" justifyContent="space-between">
+                <Input
+                  accept="image/png, image/jpeg, image/jpg"
+                  onChange={handleFile}
+                  ref={inputFile}
+                  type="file"
+                  display="none"
+                />
+                <Button
+                  onClick={() => inputFile.current.click()}
+                  width="50%"
+                  mr="1"
+                  colorScheme="facebook"
+                >
+                  Upload File
+                </Button>
+                <Button onClick={uploadHandler} width="50%" colorScheme="green">
+                  Post
+                </Button>
+              </Flex>
+            </Box>
+          ) : (
+            <Box>
+              <Text>Verify dulu bang</Text>
+            </Box>
+          )}
         </Box>
-        <Box>{renderPosts()}</Box>
+
+        {posts.length ? (
+          <Box> {renderPosts()}</Box>
+        ) : (
+          <Box alignItems="center" display="flex" flexDirection="column">
+            <Icon boxSize="20" as={ImFilePicture} />
+            <Text textAlign="center" fontSize="3xl">
+              YOU HAVEN'T POST ANYTHING YET!
+            </Text>
+          </Box>
+        )}
       </Container>
     </Page>
   );

@@ -43,8 +43,10 @@ const LoginPage = () => {
       password: "",
     },
     onSubmit: (values) => {
-      dispatch(userLogin(values, formik.setSubmitting));
-      router.push("/profile");
+      setTimeout(() => {
+        dispatch(userLogin(values, formik.setSubmitting));
+      }, 3000);
+      // router.push("/profile");
     },
     validationSchema: Yup.object().shape({
       username: Yup.string()
@@ -79,57 +81,61 @@ const LoginPage = () => {
             LOGIN
           </Heading>
 
-          <FormControl isInvalid={formik.errors.username}>
-            <FormHelperText>{formik.errors.username}</FormHelperText>
-            {/* Input Username */}
-            <Input
-              onChange={(event) =>
-                formik.setFieldValue("username", event.target.value)
-              }
-              mb="4"
-              placeholder="Username"
-              id="inputUsername"
-              value={formik.values.username}
-            />
-          </FormControl>
-
-          <FormControl isInvalid={formik.errors.password}>
-            <FormHelperText>{formik.errors.password}</FormHelperText>
-            {/* Input Password */}
-            <InputGroup>
+          <form>
+            <FormControl isInvalid={formik.errors.username}>
+              <FormHelperText>{formik.errors.username}</FormHelperText>
+              {/* Input Username */}
               <Input
                 onChange={(event) =>
-                  formik.setFieldValue("password", event.target.value)
+                  formik.setFieldValue("username", event.target.value)
                 }
-                type={visiblePassword ? "text" : "password"}
                 mb="4"
-                placeholder="Password"
-                id="inputPassword"
-                value={formik.values.password}
+                placeholder="Username"
+                id="inputUsername"
+                value={formik.values.username}
               />
-              <InputRightElement
-                children={
-                  <Icon
-                    onClick={() => setVisiblePassword(!visiblePassword)}
-                    as={visiblePassword ? IoMdEye : IoMdEyeOff}
-                    sx={{ _hover: { cursor: "pointer" } }}
-                  />
-                }
-              />
-            </InputGroup>
-          </FormControl>
+            </FormControl>
 
-          <Center>
-            <Button
-              onClick={formik.handleSubmit}
-              mt="2"
-              mb="4"
-              width="md"
-              colorScheme="facebook"
-            >
-              Login
-            </Button>
-          </Center>
+            <FormControl isInvalid={formik.errors.password}>
+              <FormHelperText>{formik.errors.password}</FormHelperText>
+              {/* Input Password */}
+              <InputGroup>
+                <Input
+                  onChange={(event) =>
+                    formik.setFieldValue("password", event.target.value)
+                  }
+                  type={visiblePassword ? "text" : "password"}
+                  mb="4"
+                  placeholder="Password"
+                  id="inputPassword"
+                  value={formik.values.password}
+                />
+                <InputRightElement
+                  children={
+                    <Icon
+                      onClick={() => setVisiblePassword(!visiblePassword)}
+                      as={visiblePassword ? IoMdEye : IoMdEyeOff}
+                      sx={{ _hover: { cursor: "pointer" } }}
+                    />
+                  }
+                />
+              </InputGroup>
+            </FormControl>
+
+            <Center>
+              <Button
+                onClick={formik.handleSubmit}
+                type="submit"
+                mt="2"
+                mb="4"
+                width="md"
+                colorScheme="facebook"
+                disabled={formik.isSubmitting}
+              >
+                Login
+              </Button>
+            </Center>
+          </form>
           <Divider />
 
           <Center>

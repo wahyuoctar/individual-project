@@ -209,6 +209,9 @@ const PhotosCard = ({
 
       setPostLikes(res2?.data?.result?.post?.like_count);
 
+      // console.log(res.data.result);
+      // console.log(res2.data.result);
+
       if (!res?.data?.result) {
         return setLikePost(false);
       } else if (res?.data?.result) {

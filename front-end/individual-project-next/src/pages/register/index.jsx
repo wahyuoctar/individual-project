@@ -51,28 +51,31 @@ const RegistrationPage = () => {
       email: "",
     },
     onSubmit: async (values) => {
-      try {
-        await axiosInstance.post("/auth/register", {
-          fullname: values.fullname,
-          username: values.username,
-          email: values.email,
-          password: values.password,
-        });
-
-        formik.setFieldValue("fullname", "");
-        formik.setFieldValue("username", "");
-        formik.setFieldValue("password", "");
-        formik.setFieldValue("repeatPassword", "");
-        formik.setFieldValue("email", "");
-        router.push("/");
-      } catch (error) {
-        console.log(error);
-        toast({
-          title: "Error",
-          description: err.message,
-          status: "error",
-        });
-      }
+      setTimeout(async () => {
+        try {
+          await axiosInstance.post("/auth/register", {
+            fullname: values.fullname,
+            username: values.username,
+            email: values.email,
+            password: values.password,
+          });
+          formik.setFieldValue("fullname", "");
+          formik.setFieldValue("username", "");
+          formik.setFieldValue("password", "");
+          formik.setFieldValue("repeatPassword", "");
+          formik.setFieldValue("email", "");
+          setSubmitting(false);
+          router.push("/");
+        } catch (error) {
+          console.log(error);
+          toast({
+            title: "Error",
+            description: err.message,
+            status: "error",
+          });
+          setSubmitting(false);
+        }
+      }, 3000);
     },
     validationSchema: Yup.object().shape({
       fullname: Yup.string().required("This field is required"),
@@ -214,16 +217,17 @@ const RegistrationPage = () => {
                 onClick={formik.handleSubmit}
                 mt="2"
                 colorScheme="green"
+                disabled={formik.isSubmitting}
               >
                 Register
               </Button>
-              <Divider />
-              <Link href={`/login`}>
-                <Button mt="2" width="md" colorScheme="blue">
-                  Login
-                </Button>
-              </Link>
             </form>
+            <Divider />
+            <Link href={`/login`}>
+              <Button mt="2" width="md" colorScheme="blue">
+                Login
+              </Button>
+            </Link>
           </Box>
         </Box>
       </Center>
