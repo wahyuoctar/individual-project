@@ -80,6 +80,7 @@ const RegistrationPage = () => {
     <Page title={`Register`}>
       <Center>
         <Box
+          fontFamily="sans-serif"
           borderRadius="md"
           py="2"
           mt="2"

@@ -209,6 +209,55 @@ const authControllers = {
                 message: "Can't Reach Server"
             })
         }
+    },
+    
+    resendVerificationEmail: async (req, res) => {
+        try {
+            const {user_id} = req.token
+
+            await VerificationToken.update({ is_valid: false}, {
+                where: {
+                    is_valid: true,
+                    user_id
+                }
+            })
+
+            const verificationToken = nanoid(21)
+
+            await VerificationToken.create({
+                token: verificationToken,
+                is_valid: true,
+                user_id,
+                valid_until: moment().add(1, "hour")
+            })
+
+            const findUser = await User.findByPk(user_id)
+
+            const verificationLink = `http://localhost:2000/auth/verify/${verificationToken}`
+
+            const template = fs.readFileSync(__dirname + "/../templates/verify.html").toString()
+
+            const renderTemplate = mustache.render(template, {
+                username: findUser.username,
+                verify_url: verificationLink,
+                full_name: findUser.fullname
+            })
+
+            await mailer({
+                to: findUser.email,
+                subject: "Verify your Account!",
+                html: renderTemplate
+            })
+
+            return res.status(201).json({
+                message: "Resent Verification Email"
+            })
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json({
+                message: "Can't Reach Server"
+            })
+        }
     }
 }
 

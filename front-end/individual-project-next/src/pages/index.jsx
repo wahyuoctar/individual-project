@@ -95,10 +95,15 @@ const HomePage = () => {
             </Box>
           </Center>
         }
-        endMessage={<h4>End of Post</h4>}
         onScroll={false}
       >
-        <Container borderRadius="md" maxW="5xl" shadow="dark-lg" marginTop="10">
+        <Container
+          fontFamily="sans-serif"
+          borderRadius="md"
+          maxW="5xl"
+          shadow="dark-lg"
+          marginTop="10"
+        >
           {renderContentList()}
         </Container>
       </InfiniteScroll>

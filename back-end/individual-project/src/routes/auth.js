@@ -8,5 +8,6 @@ router.post("/login", authControllers.loginUser)
 
 router.get("/verify/:token", authControllers.verifyUser)
 router.get("/update-token", authorizedLoggedInUser, authControllers.keepLogin)
+router.post("/resend-verification", authorizedLoggedInUser, authControllers.resendVerificationEmail)
 
 module.exports = router

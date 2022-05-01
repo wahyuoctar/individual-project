@@ -6,8 +6,8 @@ import {
   Flex,
   Container,
   Box,
-  Center,
   Icon,
+  Center,
 } from "@chakra-ui/react";
 import { useRef, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -23,7 +23,6 @@ import Profile from "../../components/Profile";
 
 const ProfilePage = () => {
   const [posts, setPosts] = useState([]);
-  const [userData, setUserData] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
 
   const userSelector = useSelector((state) => state.user);
@@ -71,11 +70,7 @@ const ProfilePage = () => {
   const fetchPosts = async () => {
     try {
       const res = await axiosInstance.get("/posts/user/" + userSelector.id);
-
       setPosts(res.data.result);
-      setUserData(res.data.result[1].User);
-      console.log(userSelector.username);
-      console.log(userData);
     } catch (err) {
       console.log(err.message);
     }
@@ -101,18 +96,37 @@ const ProfilePage = () => {
     });
   };
 
+  const resendVerificationBtn = async () => {
+    try {
+      await axiosInstance.post("/auth/resend-verification");
+    } catch (error) {
+      toast({
+        title: "Can't Reach Verification Server",
+        description: "Connect The Server",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+  };
+
   useEffect(() => {
     if (userSelector.id) {
-      dispatch(fetchUserData());
+      // dispatch(fetchUserData());
       fetchPosts();
     }
-  }, [userSelector.id]);
-
-  //   console.log(posts);
+  }, [userSelector.is_verified]);
 
   return (
     <Page title={`My Profile`}>
-      <Container borderRadius="md" minW="5xl" shadow="dark-lg" marginTop="10">
+      <Container
+        fontFamily="sans-serif"
+        borderRadius="md"
+        minW="5xl"
+        shadow="dark-lg"
+        marginTop="10"
+      >
         <Box py="4" alignItems="center" display="flex" flexDirection="column">
           <Profile
             avaPic={userSelector?.ava_pic}
@@ -168,8 +182,20 @@ const ProfilePage = () => {
               </Flex>
             </Box>
           ) : (
-            <Box>
-              <Text>Verify dulu bang</Text>
+            <Box width="xl" bgColor="#FEBA02" borderRadius="md" p="3" my="3">
+              <Text
+                fontFamily="sans-serif"
+                fontWeight="bold"
+                color="white"
+                textAlign="center"
+              >
+                Please verify your Account first before add some post!
+              </Text>
+              <Center>
+                <Button onClick={resendVerificationBtn} colorScheme="green">
+                  Verify Account
+                </Button>
+              </Center>
             </Box>
           )}
         </Box>

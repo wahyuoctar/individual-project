@@ -270,7 +270,7 @@ const PhotosCard = ({
       fetchComments();
       fetchLike();
     }
-  }, [userSelector.id, page]);
+  }, [userSelector.id, useSelector.is_verified, page]);
 
   return (
     // <Container maxW="5xl" shadow="lg" marginTop="10">
@@ -350,18 +350,20 @@ const PhotosCard = ({
               )}
 
               {/* Icon Comment */}
-              <Icon
-                boxSize="6"
-                marginRight="4"
-                as={FaRegComment}
-                onClick={hideCommentBtn}
-                sx={{
-                  _hover: {
-                    cursor: "pointer",
-                    color: "blue",
-                  },
-                }}
-              ></Icon>
+              {userSelector.is_verified ? (
+                <Icon
+                  boxSize="6"
+                  marginRight="4"
+                  as={FaRegComment}
+                  onClick={hideCommentBtn}
+                  sx={{
+                    _hover: {
+                      cursor: "pointer",
+                      color: "blue",
+                    },
+                  }}
+                ></Icon>
+              ) : null}
 
               <Text color="gray.400" fontWeight="hairline" ml={"5"}>
                 ({moment(postDate).format("MM/DD")})

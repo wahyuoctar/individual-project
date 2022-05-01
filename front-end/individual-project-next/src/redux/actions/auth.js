@@ -52,7 +52,6 @@ export function userRegister (values, setSubmitting)  {
 
       setSubmitting(false)
     } catch (err) {
-      console.log(err)
 
       dispatch({
         type: network_types.NETWORK_ERROR,

@@ -67,7 +67,12 @@ const LoginPage = () => {
 
   return (
     <Page title={`Login`}>
-      <Box display="flex" alignItems="center" flexDirection="column">
+      <Box
+        display="flex"
+        alignItems="center"
+        flexDirection="column"
+        fontFamily="sans-serif"
+      >
         <Box
           shadow={"dark-lg"}
           borderColor="blackAlpha.300"

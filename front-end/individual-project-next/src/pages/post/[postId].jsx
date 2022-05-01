@@ -242,7 +242,12 @@ const UsersPhotosPage = ({ photosDetail, commentList, count }) => {
 
   return (
     <Page title={`${photosDetail?.User?.fullname}'s Post`}>
-      <Container maxW="5xl" shadow="dark-lg" marginTop="10">
+      <Container
+        fontFamily="sans-serif"
+        maxW="5xl"
+        shadow="dark-lg"
+        marginTop="10"
+      >
         <Flex mb={"5"}>
           {/* Box for Post Image */}
           <Box my="5" flex={65}>
@@ -323,18 +328,20 @@ const UsersPhotosPage = ({ photosDetail, commentList, count }) => {
                   )}
 
                   {/* Icon Comment */}
-                  <Icon
-                    onClick={hideCommentBtn}
-                    boxSize="6"
-                    marginRight="4"
-                    as={FaRegComment}
-                    sx={{
-                      _hover: {
-                        cursor: "pointer",
-                        color: "blue",
-                      },
-                    }}
-                  ></Icon>
+                  {userSelector.is_verified ? (
+                    <Icon
+                      onClick={hideCommentBtn}
+                      boxSize="6"
+                      marginRight="4"
+                      as={FaRegComment}
+                      sx={{
+                        _hover: {
+                          cursor: "pointer",
+                          color: "blue",
+                        },
+                      }}
+                    ></Icon>
+                  ) : null}
 
                   <Text color="gray.400" fontWeight="hairline" ml={"5"}>
                     ({moment(photosDetail?.createdAt).format("MM/DD")})

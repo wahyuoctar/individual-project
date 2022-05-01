@@ -16,6 +16,7 @@ import { useFormik } from "formik";
 import { fetchUserData } from "../../../redux/actions/auth";
 import requiresAuth from "../../../lib/hoc/requiresAuth";
 import axios from "axios";
+import { user_types } from "../../../redux/types";
 
 const EditProfilePage = () => {
   const [userData, setUserData] = useState({});
@@ -49,22 +50,54 @@ const EditProfilePage = () => {
     const formData = new FormData();
     const { fullname, username, biography, current_city } = formik.values;
 
-    if (!formik.values.username) {
-      formik.values.username = userData.username;
-    }
+    // if (!formik.values.username) {
+    //   username = userData.username;
+    // }
 
     formData.append("fullname", fullname);
     formData.append("username", username);
     formData.append("biography", biography);
     formData.append("current_city", current_city);
     formData.append("ava_pic_file", selectedFile);
+
     fetchUser();
 
     router.push("/");
 
     try {
+      const newData = {
+        username: formik.values.username
+          ? formik.values.username
+          : userSelector.username,
+        id: userSelector.id,
+        email: userSelector.email,
+        biography: formik.values.biography
+          ? formik.values.biography
+          : userSelector.biography,
+        current_city: formik.values.current_city
+          ? formik.values.current_city
+          : userSelector.current_city,
+        ava_pic: userSelector.ava_pic,
+        is_verified: userSelector.is_verified,
+        fullname: formik.values.fullname
+          ? formik.values.fullname
+          : userSelector.fullname,
+        followers: userSelector.followers,
+        following: userSelector.following,
+        posts: userSelector.posts,
+      };
+
       await axiosInstance.patch("/users/" + userData.id, formData);
       setSelectedFile(null);
+
+      dispatch({
+        type: user_types.LOGIN_USER,
+        payload: newData,
+      });
+      dispatch({
+        type: user_types.KEEP_LOGIN,
+        payload: newData,
+      });
       formik.setFieldValue("fullname", "");
       formik.setFieldValue("username", "");
       formik.setFieldValue("biography", "");
@@ -125,11 +158,12 @@ const EditProfilePage = () => {
     } else if (!userSelector.id) {
       router.push("/");
     }
-  }, [userSelector.id]);
+  }, [userSelector]);
 
   return (
     <Page title={`Edit My Profile`}>
       <Container
+        fontFamily="sans-serif"
         borderRadius="md"
         py="4"
         alignItems="center"
