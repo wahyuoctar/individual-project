@@ -10,36 +10,27 @@ import {
   Input,
   InputGroup,
   InputRightElement,
-  Text,
-  useToast,
   Divider,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import * as Yup from "yup";
-import { axiosInstance } from "../../config/api";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Page from "../../components/Page";
 import Link from "next/link";
+import { userRegister } from "../../redux/actions/auth";
 
 const RegistrationPage = () => {
-  const toast = useToast();
+  const dispatch = useDispatch();
   const router = useRouter();
+
   const [visiblePassword, setVisiblePassword] = useState(false);
   const [visibleRepeatPassword, setVisibleRepeatPassword] = useState(false);
 
+  // Berfungsi untuk memastikan apakah user sudah login apa belum
   const authSelector = useSelector((state) => state.auth);
-
-  const registerBtnHandler = async () => {
-    const newUserData = {
-      fullname: formik.values.fullname,
-      username: formik.values.username,
-      password: formik.values.password,
-      email: formik.values.email,
-    };
-  };
 
   // Menghandle inputan tanpa useState
   const formik = useFormik({
@@ -50,31 +41,14 @@ const RegistrationPage = () => {
       repeatPassword: "",
       email: "",
     },
-    onSubmit: async (values) => {
-      setTimeout(async () => {
-        try {
-          await axiosInstance.post("/auth/register", {
-            fullname: values.fullname,
-            username: values.username,
-            email: values.email,
-            password: values.password,
-          });
-          formik.setFieldValue("fullname", "");
-          formik.setFieldValue("username", "");
-          formik.setFieldValue("password", "");
-          formik.setFieldValue("repeatPassword", "");
-          formik.setFieldValue("email", "");
-          setSubmitting(false);
-          router.push("/");
-        } catch (error) {
-          console.log(error);
-          toast({
-            title: "Error",
-            description: err.message,
-            status: "error",
-          });
-          setSubmitting(false);
-        }
+    onSubmit: (values) => {
+      setTimeout(() => {
+        dispatch(userRegister(values, formik.setSubmitting));
+        formik.setFieldValue("fullname", "");
+        formik.setFieldValue("username", "");
+        formik.setFieldValue("password", "");
+        formik.setFieldValue("repeatPassword", "");
+        formik.setFieldValue("email", "");
       }, 3000);
     },
     validationSchema: Yup.object().shape({
