@@ -95,7 +95,7 @@ const LoginPage = () => {
                   formik.setFieldValue("username", event.target.value)
                 }
                 mb="4"
-                placeholder="Username"
+                placeholder="Username or Email"
                 id="inputUsername"
                 value={formik.values.username}
               />

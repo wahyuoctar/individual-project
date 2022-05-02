@@ -33,6 +33,7 @@ const PhotosCard = ({
   avaPic,
   location,
   fullName,
+  username,
   id: postId,
   userId,
   postUserId,
@@ -292,7 +293,7 @@ const PhotosCard = ({
         {/* Flex for User Detail */}
         <Flex mx="3" marginTop="2">
           <Box display="flex" flexDirection="column">
-            {/* Box for Avatar, Fullname, Location */}
+            {/* Box for Avatar, username, Location */}
             <Box mb="3" paddingX="2" display="flex" alignItems="center">
               {isInProfile ? (
                 <Avatar src={avaPic} />
@@ -303,13 +304,13 @@ const PhotosCard = ({
               )}
               <Box marginLeft="2">
                 {isInProfile ? (
-                  <Text className="fullname" fontWeight="bold">
-                    {fullName}
+                  <Text className="username" fontWeight="bold">
+                    {username}
                   </Text>
                 ) : (
                   <Link textDecoration="none" href={`/profile/${userId}`}>
-                    <Text className="fullname" fontWeight="bold">
-                      {fullName}
+                    <Text className="username" fontWeight="bold">
+                      {username}
                     </Text>
                   </Link>
                 )}

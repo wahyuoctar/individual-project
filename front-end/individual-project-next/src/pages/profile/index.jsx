@@ -15,8 +15,6 @@ import { axiosInstance } from "../../config/api";
 import PhotosCard from "../../components/PhotosCard";
 import { useFormik } from "formik";
 import { ImFilePicture } from "react-icons/im";
-
-import { fetchUserData } from "../../redux/actions/auth";
 import requiresAuth from "../../lib/hoc/requiresAuth";
 import Page from "../../components/Page";
 import Profile from "../../components/Profile";
@@ -27,7 +25,6 @@ const ProfilePage = () => {
 
   const userSelector = useSelector((state) => state.user);
 
-  const dispatch = useDispatch();
   const inputFile = useRef(null);
 
   const handleFile = (event) => {
@@ -81,6 +78,7 @@ const ProfilePage = () => {
       return (
         <PhotosCard
           fullName={val?.User?.fullname || "Fullname"}
+          username={val?.User?.username || "username"}
           avaPic={val?.User?.ava_pic}
           caption={val?.caption}
           likes={val?.like_count}

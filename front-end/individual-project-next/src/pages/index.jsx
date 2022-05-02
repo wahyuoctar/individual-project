@@ -57,6 +57,7 @@ const HomePage = () => {
       return (
         <PhotosCard
           fullName={val?.User?.fullname || "Fullname"}
+          username={val?.User?.username || "Username"}
           avaPic={val?.User?.ava_pic}
           caption={val?.caption}
           location={val?.location}

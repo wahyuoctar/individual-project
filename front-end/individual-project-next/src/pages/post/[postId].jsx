@@ -261,7 +261,7 @@ const UsersPhotosPage = ({ photosDetail, commentList, count }) => {
             {/* Flex for User Detail */}
             <Flex mx="3" marginTop="2">
               <Box display="flex" flexDirection="column">
-                {/* Box for Avatar, Fullname, Location */}
+                {/* Box for Avatar, username, Location */}
 
                 {photosDetail?.user_id == userSelector.id ? (
                   <Box mb="3" paddingX="2" display="flex" alignItems="center">
@@ -270,8 +270,8 @@ const UsersPhotosPage = ({ photosDetail, commentList, count }) => {
                     </Link>
                     <Box marginLeft="2">
                       <Link textDecoration="none" href={`/profile`}>
-                        <Text className="fullname" fontWeight="bold">
-                          {photosDetail?.User?.fullname}
+                        <Text className="username" fontWeight="bold">
+                          {photosDetail?.User?.username}
                         </Text>
                       </Link>
                       <Text color="gray">{photosDetail?.location}</Text>
@@ -287,8 +287,8 @@ const UsersPhotosPage = ({ photosDetail, commentList, count }) => {
                         textDecoration="none"
                         href={`/profile/${photosDetail?.User?.id}`}
                       >
-                        <Text className="fullname" fontWeight="bold">
-                          {photosDetail?.User?.fullname}
+                        <Text className="username" fontWeight="bold">
+                          {photosDetail?.User?.username}
                         </Text>
                       </Link>
                       <Text color="gray">{photosDetail?.location}</Text>
