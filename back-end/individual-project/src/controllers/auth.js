@@ -14,7 +14,9 @@ const authControllers = {
 
             const findUser = await User.findOne({
                 where: {
-                    username
+                    [Op.or]: [
+                        {username},
+                    {email: username}]
                 }
             })
 

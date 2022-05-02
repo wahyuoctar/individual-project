@@ -55,18 +55,40 @@ const Profile = ({
       <Box display="flex" mt="3">
         {/* Box for posts */}
         <Box marginLeft="7">
-          <Text textAlign={"center"} fontWeight="bold">
-            {posts}
-          </Text>
-          <Text color="gray">Posts</Text>
+          {posts > 1 ? (
+            <>
+              <Text textAlign={"center"} fontWeight="bold">
+                {posts}
+              </Text>
+              <Text color="gray">Posts</Text>
+            </>
+          ) : (
+            <>
+              <Text textAlign={"center"} fontWeight="bold">
+                {posts}
+              </Text>
+              <Text color="gray">Post</Text>
+            </>
+          )}
         </Box>
 
         {/* Box for followers */}
         <Box marginLeft="7">
-          <Text textAlign={"center"} fontWeight="bold">
-            {followers}
-          </Text>
-          <Text color="gray">Followers</Text>
+          {followers > 1 ? (
+            <>
+              <Text textAlign={"center"} fontWeight="bold">
+                {followers}
+              </Text>
+              <Text color="gray">Followers</Text>
+            </>
+          ) : (
+            <>
+              <Text textAlign={"center"} fontWeight="bold">
+                {followers}
+              </Text>
+              <Text color="gray">Follower</Text>
+            </>
+          )}
         </Box>
 
         {/* Box for following */}

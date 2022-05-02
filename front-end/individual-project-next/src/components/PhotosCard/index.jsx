@@ -36,7 +36,6 @@ const PhotosCard = ({
   id: postId,
   userId,
   postUserId,
-  likes,
   caption,
   postDate,
   isInDetail = false,

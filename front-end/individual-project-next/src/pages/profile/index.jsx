@@ -125,7 +125,7 @@ const ProfilePage = () => {
         borderRadius="md"
         minW="5xl"
         shadow="dark-lg"
-        marginTop="10"
+        my="10"
       >
         <Box py="4" alignItems="center" display="flex" flexDirection="column">
           <Profile

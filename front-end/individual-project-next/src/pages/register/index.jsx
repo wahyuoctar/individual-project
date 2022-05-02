@@ -49,6 +49,7 @@ const RegistrationPage = () => {
         formik.setFieldValue("password", "");
         formik.setFieldValue("repeatPassword", "");
         formik.setFieldValue("email", "");
+        router.push("/login");
       }, 3000);
     },
     validationSchema: Yup.object().shape({
