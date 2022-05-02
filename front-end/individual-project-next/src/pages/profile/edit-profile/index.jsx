@@ -15,7 +15,6 @@ import Page from "../../../components/Page";
 import { useFormik } from "formik";
 import { fetchUserData } from "../../../redux/actions/auth";
 import requiresAuth from "../../../lib/hoc/requiresAuth";
-import axios from "axios";
 import { user_types } from "../../../redux/types";
 
 const EditProfilePage = () => {

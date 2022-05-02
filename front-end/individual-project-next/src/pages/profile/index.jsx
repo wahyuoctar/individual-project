@@ -21,7 +21,9 @@ import Profile from "../../components/Profile";
 
 const ProfilePage = () => {
   const [posts, setPosts] = useState([]);
+  const [postsLike, setPostsLike] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [postSwitch, setPostSwitch] = useState(false);
 
   const userSelector = useSelector((state) => state.user);
 
@@ -109,10 +111,53 @@ const ProfilePage = () => {
     }
   };
 
+  const fetchPostsLike = async () => {
+    try {
+      const res = await axiosInstance.get(
+        "/posts/user-likes/" + userSelector.id
+      );
+      setPostsLike(res.data.result);
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
+  const renderPostsLike = () => {
+    return postsLike.map((val) => {
+      return (
+        <PhotosCard
+          fullName={val?.Post?.User?.fullname || "Fullname"}
+          username={val?.Post?.User?.username || "username"}
+          avaPic={val?.Post?.User?.ava_pic}
+          caption={val?.Post?.caption}
+          likes={val?.Post?.like_count}
+          location={val?.Post?.location}
+          id={val?.Post?.id}
+          imageUrl={val?.Post?.image_url}
+          userId={userSelector.id}
+          postDate={val?.Post?.createdAt}
+          isInProfile={true}
+          postUserId={val?.Post?.user_id}
+        />
+      );
+    });
+  };
+
+  const switchPost = () => {
+    setPostSwitch(false);
+    fetchPosts();
+  };
+
+  const switchPostLike = () => {
+    setPostSwitch(true);
+    fetchPostsLike();
+  };
+
   useEffect(() => {
     if (userSelector.id) {
       // dispatch(fetchUserData());
       fetchPosts();
+      fetchPostsLike();
     }
   }, [userSelector.is_verified]);
 
@@ -198,15 +243,44 @@ const ProfilePage = () => {
           )}
         </Box>
 
-        {posts.length ? (
-          <Box> {renderPosts()}</Box>
+        {/* Switch Button To see our post or post we've like */}
+        <Center mb="3">
+          <Flex>
+            {postSwitch ? (
+              <>
+                <Button onClick={switchPost} mr="3">
+                  My Post
+                </Button>
+                <Button onClick={switchPostLike} colorScheme="red">
+                  Post I've Liked
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button onClick={switchPost} colorScheme="red" mr="3">
+                  My Post
+                </Button>
+                <Button onClick={switchPostLike}>Post I've Liked</Button>
+              </>
+            )}
+          </Flex>
+        </Center>
+
+        {postSwitch ? (
+          <Box>{renderPostsLike()}</Box>
         ) : (
-          <Box alignItems="center" display="flex" flexDirection="column">
-            <Icon boxSize="20" as={ImFilePicture} />
-            <Text textAlign="center" fontSize="3xl">
-              YOU HAVEN'T POST ANYTHING YET!
-            </Text>
-          </Box>
+          <>
+            {posts.length ? (
+              <Box> {renderPosts()}</Box>
+            ) : (
+              <Box alignItems="center" display="flex" flexDirection="column">
+                <Icon boxSize="20" as={ImFilePicture} />
+                <Text textAlign="center" fontSize="3xl">
+                  YOU HAVEN'T POST ANYTHING YET!
+                </Text>
+              </Box>
+            )}
+          </>
         )}
       </Container>
     </Page>

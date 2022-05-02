@@ -255,9 +255,44 @@ const postControllers = {
         }
     },
 
-    
+    getPostByUserLike: async (req, res) => {
+        try {
+            const {userId} = req.params
 
-    
+            const findLike = await Like.findAll({
+                where: {
+                    user_id: userId
+                },
+                include: [
+                    {
+                        model: Post,
+                        include: [
+                            {
+                                model: User
+                            },
+                            {
+                                model: Comment
+                            }
+                        ]
+                    }
+                ],
+                order: [
+                    ['createdAt', 'DESC']
+                ] 
+            })
+
+            res.status(200).json({
+                message: "Find Posts!",
+                result: findLike
+            })
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json({
+                message: "Can't Get Posts User has Liked"
+            })
+        }
+    }
+
 }
 
 module.exports = postControllers

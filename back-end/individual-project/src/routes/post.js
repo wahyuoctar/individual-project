@@ -27,6 +27,7 @@ router.delete("/:postId", authorizedLoggedInUser, postControllers.deletePost)
 router.get("/:postId", postControllers.getPostById)
 router.get("/user/:userId", postControllers.getPostByUserId)
 
+router.get("/user-likes/:userId", postControllers.getPostByUserLike)
 
 
 
