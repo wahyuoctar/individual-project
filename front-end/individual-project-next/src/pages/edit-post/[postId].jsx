@@ -78,59 +78,61 @@ const EditPostPage = ({ photosDetail }) => {
                     </Text>
                   </Box>
                 </Box>
-                <Box width="xs">
-                  <FormLabel>Number of Likes:</FormLabel>
-                  <Text textAlign="end">
-                    {photosDetail?.like_count?.toLocaleString()}
-                  </Text>
+                <form>
+                  <Box width="xs">
+                    <FormLabel>Number of Likes:</FormLabel>
+                    <Text textAlign="end">
+                      {photosDetail?.like_count?.toLocaleString()}
+                    </Text>
+                    <FormLabel>Created At:</FormLabel>
+                    <Text
+                      textAlign="end"
+                      color="gray.400"
+                      fontWeight="hairline"
+                      ml={"5"}
+                    >
+                      {moment(photosDetail?.createdAt).format("DD MMMM YYYY")}
+                    </Text>
+                    <FormLabel>Location: </FormLabel>
+                    <Input
+                      textAlign="end"
+                      width="100%"
+                      placeholder="Location..."
+                      mb="2"
+                      onChange={(event) =>
+                        formik.setFieldValue("location", event.target.value)
+                      }
+                      value={formik.values.location}
+                    />
 
-                  <FormLabel>Created At:</FormLabel>
-                  <Text
-                    textAlign="end"
-                    color="gray.400"
-                    fontWeight="hairline"
-                    ml={"5"}
-                  >
-                    {moment(photosDetail?.createdAt).format("DD MMMM YYYY")}
-                  </Text>
-                  <FormLabel>Location: </FormLabel>
-                  <Input
-                    textAlign="end"
-                    width="100%"
-                    placeholder="Location..."
-                    mb="2"
-                    onChange={(event) =>
-                      formik.setFieldValue("location", event.target.value)
-                    }
-                    value={formik.values.location}
-                  />
-
-                  <FormLabel>Caption: </FormLabel>
-                  <Input
-                    textAlign="end"
-                    width="100%"
-                    placeholder="Caption..."
-                    onChange={(event) =>
-                      formik.setFieldValue("caption", event.target.value)
-                    }
-                    value={formik.values.caption}
-                  />
-                </Box>
-                <Box mt="3" align="end">
-                  <Button
-                    onClick={formik.handleSubmit}
-                    colorScheme="green"
-                    mr="3"
-                    width="fit-content"
-                  >
-                    Save
-                  </Button>
-                  <Link href={`/profile`}>
-                    <Button colorScheme="red" width="fit-content">
-                      Cancel
+                    <FormLabel>Caption: </FormLabel>
+                    <Input
+                      textAlign="end"
+                      width="100%"
+                      placeholder="Caption..."
+                      onChange={(event) =>
+                        formik.setFieldValue("caption", event.target.value)
+                      }
+                      value={formik.values.caption}
+                    />
+                  </Box>
+                  <Box mt="3" align="end">
+                    <Button
+                      onClick={formik.handleSubmit}
+                      colorScheme="green"
+                      mr="3"
+                      width="fit-content"
+                      type="submit"
+                    >
+                      Save
                     </Button>
-                  </Link>
-                </Box>
+                    <Link href={`/profile`}>
+                      <Button colorScheme="red" width="fit-content">
+                        Cancel
+                      </Button>
+                    </Link>
+                  </Box>
+                </form>
               </Box>
             </Flex>
           </Box>

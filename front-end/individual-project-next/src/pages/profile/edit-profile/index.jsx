@@ -50,10 +50,6 @@ const EditProfilePage = () => {
     const formData = new FormData();
     const { fullname, username, biography, current_city } = formik.values;
 
-    // if (!formik.values.username) {
-    //   username = userData.username;
-    // }
-
     formData.append("fullname", fullname);
     formData.append("username", username);
     formData.append("biography", biography);
@@ -172,58 +168,60 @@ const EditProfilePage = () => {
         shadow="dark-lg"
         marginTop="10"
       >
-        <Input
-          accept="image/png, image/jpeg, image/jpg"
-          onChange={handleFile}
-          ref={inputFile}
-          type="file"
-          display="none"
-        />
-        <Avatar
-          onClick={() => inputFile.current.click()}
-          src={userData?.ava_pic}
-          size="xl"
-        />
-        <Input
-          placeholder="Fullname"
-          onChange={(event) =>
-            formik.setFieldValue("fullname", event.target.value)
-          }
-          value={formik.values.fullname}
-          my="4"
-        />
-        <Input
-          placeholder={`${userData?.username}`}
-          onChange={(event) =>
-            formik.setFieldValue("username", event.target.value)
-          }
-          value={formik.values.username}
-          my="4"
-        />
-        <Input
-          placeholder="Biography"
-          onChange={(event) =>
-            formik.setFieldValue("biography", event.target.value)
-          }
-          value={formik.values.biography}
-          my="4"
-        />
-        <Input
-          placeholder="Current City"
-          onChange={(event) =>
-            formik.setFieldValue("current_city", event.target.value)
-          }
-          value={formik.values.current_city}
-          my="4"
-        />
-        <Box>
-          <Button onClick={uploadHandler} colorScheme="green">
-            Save
-          </Button>
-          <Link href="/profile">
-            <Button colorScheme="red">Cancel</Button>
-          </Link>
-        </Box>
+        <form>
+          <Input
+            accept="image/png, image/jpeg, image/jpg"
+            onChange={handleFile}
+            ref={inputFile}
+            type="file"
+            display="none"
+          />
+          <Avatar
+            onClick={() => inputFile.current.click()}
+            src={userData?.ava_pic}
+            size="xl"
+          />
+          <Input
+            placeholder="Fullname"
+            onChange={(event) =>
+              formik.setFieldValue("fullname", event.target.value)
+            }
+            value={formik.values.fullname}
+            my="4"
+          />
+          <Input
+            placeholder={`${userData?.username}`}
+            onChange={(event) =>
+              formik.setFieldValue("username", event.target.value)
+            }
+            value={formik.values.username}
+            my="4"
+          />
+          <Input
+            placeholder="Biography"
+            onChange={(event) =>
+              formik.setFieldValue("biography", event.target.value)
+            }
+            value={formik.values.biography}
+            my="4"
+          />
+          <Input
+            placeholder="Current City"
+            onChange={(event) =>
+              formik.setFieldValue("current_city", event.target.value)
+            }
+            value={formik.values.current_city}
+            my="4"
+          />
+          <Box>
+            <Button type="submit" onClick={uploadHandler} colorScheme="green">
+              Save
+            </Button>
+            <Link href="/profile">
+              <Button colorScheme="red">Cancel</Button>
+            </Link>
+          </Box>
+        </form>
       </Container>
     </Page>
   );
