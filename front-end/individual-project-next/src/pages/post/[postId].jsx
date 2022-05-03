@@ -17,7 +17,16 @@ import {
   FormHelperText,
   Input,
   Button,
+  IconButton,
 } from "@chakra-ui/react";
+import {
+  WhatsappShareButton,
+  WhatsappIcon,
+  TwitterIcon,
+  TwitterShareButton,
+  FacebookIcon,
+  FacebookShareButton,
+} from "react-share";
 import moment from "moment";
 import { FaRegHeart, FaRegComment, FaHeart } from "react-icons/fa";
 import { BsGripVertical } from "react-icons/bs";
@@ -25,10 +34,12 @@ import { axiosInstance } from "../../config/api";
 import { useEffect, useState } from "react";
 import { Container } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
+import { useRouter } from "next/router";
 import axios from "axios";
 import Page from "../../components/Page";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { BiLink } from "react-icons/bi";
 
 const UsersPhotosPage = ({ photosDetail, commentList, count }) => {
   const [userComments, setUserComments] = useState([]);
@@ -38,6 +49,7 @@ const UsersPhotosPage = ({ photosDetail, commentList, count }) => {
   const toast = useToast();
   const [postLikes, setPostLikes] = useState({});
   const [likePost, setLikePost] = useState(false);
+  const router = useRouter();
 
   const commentLimit = 5;
 
@@ -233,15 +245,33 @@ const UsersPhotosPage = ({ photosDetail, commentList, count }) => {
     }
   };
 
+  const webUrl = `https://proud-spoons-cover-36-69-112-86.loca.lt`;
+
+  const copyLinkBtnHandler = () => {
+    navigator.clipboard.writeText(`${webUrl}${router.asPath}`);
+
+    toast({
+      position: "top-right",
+      status: "info",
+      title: "Link copied",
+    });
+  };
+
   useEffect(() => {
     if (userSelector.id) {
       fetchComments();
       fetchLike();
     }
+    return fetchLike();
   }, [userSelector.id, page]);
 
   return (
-    <Page title={`${photosDetail?.User?.fullname}'s Post`}>
+    <Page
+      title={`${photosDetail?.User?.fullname}'s Post`}
+      description={photosDetail.caption}
+      image={photosDetail.image_url}
+      url={`${webUrl}${router.asPath}`}
+    >
       <Container
         fontFamily="sans-serif"
         maxW="5xl"
@@ -373,12 +403,41 @@ const UsersPhotosPage = ({ photosDetail, commentList, count }) => {
                 </Flex>
 
                 <Text fontSize="sm" fontWeight="bold">
-                  {postLikes?.toLocaleString()} likes
+                  {postLikes?.toLocaleString() ||
+                    photosDetail?.like_count?.toLocaleString()}{" "}
+                  likes
                 </Text>
                 <Text>{photosDetail?.caption}</Text>
               </Box>
             </Flex>
             <Divider ml={"2"} />
+
+            {/* SSR */}
+            <Flex ml="3" mt="1">
+              <WhatsappShareButton
+                url={`${webUrl}${router.asPath}`}
+                title={`${photosDetail?.User?.fullname}'s Post`}
+              >
+                <WhatsappIcon size="40" round />
+              </WhatsappShareButton>
+              <TwitterShareButton
+                url={`${webUrl}${router.asPath}`}
+                title={`${photosDetail?.User?.fullname}'s Post`}
+              >
+                <TwitterIcon size="40" round />
+              </TwitterShareButton>
+              <FacebookShareButton
+                url={`${webUrl}${router.asPath}`}
+                quote={`${photosDetail?.User?.fullname}'s Post`}
+              >
+                <FacebookIcon size="40" round />
+              </FacebookShareButton>
+              <IconButton
+                onClick={copyLinkBtnHandler}
+                borderRadius="50%"
+                icon={<Icon as={BiLink} />}
+              />
+            </Flex>
 
             {/* Box Comment */}
             {renderComment()}

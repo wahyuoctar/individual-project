@@ -17,7 +17,11 @@ const Page = ({ children, title, description, url, type, image }) => {
           property="og:description"
           content={description || "Default description"}
         />
-        <meta property="og:image" content={image || "image url default"} />
+        <meta
+          property="og:image"
+          itemProp="image"
+          content={image || "image url default"}
+        />
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta property="twitter:domain" content={"http://localhost:3000"} />
