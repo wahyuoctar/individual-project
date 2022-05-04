@@ -73,9 +73,9 @@ const userControllers = {
             const {fullname, biography, username, current_city} = req.body
             
             // Variable variable yg berfungsi untuk nama file pada avatar yg diupload
+            const filename = req.file
             const uploadFileDomain = process.env.UPLOAD_FILE_DOMAIN
             const filePath = "ava_pics"
-            const filename = req.file
             
             // Mencari user apakah ada atau tidak
             const findUser = await User.findOne({
@@ -97,7 +97,7 @@ const userControllers = {
                 }
             })
             
-            if (!username) {
+            if (!username || username == findUser.username) {
                 if (filename) {
                     const editedUser = await User.update({
                         fullname,
@@ -142,8 +142,6 @@ const userControllers = {
                 })
             }
             
-
-
             // todo: edit foto, tapi file pada public ditimpa
             if (filename) {
                 const editedUser = await User.update({

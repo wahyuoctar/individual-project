@@ -23,6 +23,7 @@ import moment from "moment";
 import { FaRegHeart, FaRegComment, FaHeart } from "react-icons/fa";
 import { BsGripVertical } from "react-icons/bs";
 import { useSelector } from "react-redux";
+import { useRouter } from "next/router";
 import { axiosInstance } from "../../config/api";
 import { useEffect, useState } from "react";
 import { useFormik } from "formik";
@@ -50,7 +51,7 @@ const PhotosCard = ({
   const toast = useToast();
   const [postLikes, setPostLikes] = useState({});
   const [likePost, setLikePost] = useState(false);
-
+  const router = useRouter();
   const commentLimit = 5;
 
   const formik = useFormik({
@@ -86,6 +87,10 @@ const PhotosCard = ({
     }),
   });
 
+  const refreshPage = () => {
+    window.location.reload();
+  };
+
   const fetchComments = async () => {
     try {
       const res = await axiosInstance.get("/posts/" + postId, {
@@ -114,8 +119,12 @@ const PhotosCard = ({
 
   const deleteButton = async () => {
     try {
-      await axiosInstance.delete("/posts/" + postId);
-      // router.push("/profile");
+      if (confirm("Are You Sure to Delete This Post ?")) {
+        await axiosInstance.delete("/posts/" + postId);
+        refreshPage();
+      } else {
+        return;
+      }
       // todos: setelah delete mau nya ngerender tapi pegimane dah
     } catch (error) {
       console.log(error);

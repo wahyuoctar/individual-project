@@ -18,14 +18,20 @@ import { ImFilePicture } from "react-icons/im";
 import requiresAuth from "../../lib/hoc/requiresAuth";
 import Page from "../../components/Page";
 import Profile from "../../components/Profile";
+import { fetchUserData } from "../../redux/actions/auth";
 
 const ProfilePage = () => {
   const [posts, setPosts] = useState([]);
   const [postsLike, setPostsLike] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
   const [postSwitch, setPostSwitch] = useState(false);
+  const dispatch = useDispatch();
 
   const userSelector = useSelector((state) => state.user);
+
+  const refreshPage = () => {
+    window.location.reload();
+  };
 
   const inputFile = useRef(null);
 
@@ -60,7 +66,7 @@ const ProfilePage = () => {
       setSelectedFile(null);
       formik.setFieldValue("caption", "");
       formik.setFieldValue("location", "");
-      fetchPosts();
+      refreshPage();
     } catch (err) {
       console.log(err);
     }
@@ -155,11 +161,11 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (userSelector.id) {
-      // dispatch(fetchUserData());
+      dispatch(fetchUserData());
       fetchPosts();
       fetchPostsLike();
     }
-  }, [userSelector.is_verified]);
+  }, [userSelector]);
 
   return (
     <Page title={`My Profile`}>

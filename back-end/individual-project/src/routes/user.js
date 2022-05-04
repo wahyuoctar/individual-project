@@ -16,7 +16,7 @@ router.patch("/:userId", fileUploader({
     destinationFolder: "avatars",
     prefix: "AVATAR",
     fileType: "image"
-}).single("ava_pic_file"), userControllers.editUser)
+}).single("ava_pics"), userControllers.editUser)
 
 router.get("/:userId", userControllers.getUserById)
 

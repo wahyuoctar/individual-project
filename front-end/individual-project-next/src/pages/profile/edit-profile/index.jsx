@@ -53,38 +53,29 @@ const EditProfilePage = () => {
     formData.append("username", username);
     formData.append("biography", biography);
     formData.append("current_city", current_city);
-    formData.append("ava_pic_file", selectedFile);
+    formData.append("ava_pics", selectedFile);
 
-    fetchUser();
+    // fetchUser();
 
-    router.push("/");
+    // router.push("/");
 
     try {
-      const newData = {
-        username: formik.values.username
-          ? formik.values.username
-          : userSelector.username,
-        id: userSelector.id,
-        email: userSelector.email,
-        biography: formik.values.biography
-          ? formik.values.biography
-          : userSelector.biography,
-        current_city: formik.values.current_city
-          ? formik.values.current_city
-          : userSelector.current_city,
-        ava_pic: userSelector.ava_pic,
-        is_verified: userSelector.is_verified,
-        fullname: formik.values.fullname
-          ? formik.values.fullname
-          : userSelector.fullname,
-        followers: userSelector.followers,
-        following: userSelector.following,
-        posts: userSelector.posts,
-      };
-
       await axiosInstance.patch("/users/" + userData.id, formData);
       setSelectedFile(null);
 
+      const newData = {
+        username: userData.username,
+        id: userSelector.id,
+        email: userSelector.email,
+        biography: userData.biography,
+        current_city: userData.current_city,
+        ava_pic: userData.ava_pic,
+        is_verified: userData.is_verified,
+        fullname: userData.fullname,
+        followers: userData.followers,
+        following: userData.following,
+        posts: userData.posts,
+      };
       dispatch({
         type: user_types.LOGIN_USER,
         payload: newData,
@@ -117,32 +108,6 @@ const EditProfilePage = () => {
       current_city: `${userSelector?.current_city}`,
     },
     validateOnChange: false,
-    // onSubmit: async (values) => {
-    //   const formData = new FormData();
-
-    //   try {
-    //     await axiosInstance.patch("/users/" + userData.id, {
-    //       fullname: values.fullname,
-    //       username: values.username,
-    //       biography: values.biography,
-    //       current_city: values.current_city,
-    //     });
-
-    //     formik.setFieldValue("fullname", "");
-    //     formik.setFieldValue("username", "");
-    //     formik.setFieldValue("biography", "");
-    //     formik.setFieldValue("current_city", "");
-    //   } catch (error) {
-    //     toast({
-    //       title: "Can't Reach The Server",
-    //       description: "Connect The Server",
-    //       status: "error",
-    //       duration: 3000,
-    //       isClosable: true,
-    //       position: "top",
-    //     });
-    //   }
-    // },
   });
 
   useEffect(() => {
@@ -153,7 +118,7 @@ const EditProfilePage = () => {
     } else if (!userSelector.id) {
       router.push("/");
     }
-  }, [userSelector]);
+  }, [userSelector.id]);
 
   return (
     <Page title={`Edit My Profile`}>
