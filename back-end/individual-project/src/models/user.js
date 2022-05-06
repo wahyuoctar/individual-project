@@ -39,7 +39,6 @@ const User = (sequelize) => {
             },
             current_city: {
                 type: DataTypes.STRING,
-                defaultValue: "Location"
             },
             is_verified: {
                 type: DataTypes.BOOLEAN,

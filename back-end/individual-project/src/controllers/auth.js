@@ -112,7 +112,7 @@ const authControllers = {
                 user_id: newUser.id
             })
 
-            const verificationUrl = `http://localhost:2000/auth/verify-account/${emailToken}`
+            const verificationUrl = `http://localhost:2000/auth/verify/${emailToken}`
 
             const template = fs.readFileSync(__dirname + "/../templates/verify.html").toString()
 

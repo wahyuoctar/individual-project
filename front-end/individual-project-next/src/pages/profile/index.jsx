@@ -273,7 +273,18 @@ const ProfilePage = () => {
         </Center>
 
         {postSwitch ? (
-          <Box>{renderPostsLike()}</Box>
+          <>
+            {postsLike.length ? (
+              <Box>{renderPostsLike()}</Box>
+            ) : (
+              <Box alignItems="center" display="flex" flexDirection="column">
+                <Icon boxSize="20" as={ImFilePicture} />
+                <Text textAlign="center" fontSize="3xl">
+                  YOU HAVEN'T LIKED ANY OF THE POST YET
+                </Text>
+              </Box>
+            )}
+          </>
         ) : (
           <>
             {posts.length ? (

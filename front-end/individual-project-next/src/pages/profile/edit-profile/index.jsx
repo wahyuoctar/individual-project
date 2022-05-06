@@ -2,6 +2,7 @@ import {
   Avatar,
   Box,
   Button,
+  Center,
   Container,
   Input,
   useToast,
@@ -26,7 +27,6 @@ const EditProfilePage = () => {
   const [selectedFile, setSelectedFile] = useState(null);
 
   const userSelector = useSelector((state) => state.user);
-  const authSelector = useSelector((state) => state.auth);
 
   const fetchUser = async () => {
     try {
@@ -103,9 +103,9 @@ const EditProfilePage = () => {
   const formik = useFormik({
     initialValues: {
       fullname: `${userSelector?.fullname}`,
-      username: ``,
-      biography: `${userSelector?.biography}`,
-      current_city: `${userSelector?.current_city}`,
+      username: `${userSelector?.username}`,
+      biography: `${userSelector?.biography || ""}`,
+      current_city: `${userSelector?.current_city || ""}`,
     },
     validateOnChange: false,
   });
@@ -133,18 +133,20 @@ const EditProfilePage = () => {
         marginTop="10"
       >
         <form>
-          <Input
-            accept="image/png, image/jpeg, image/jpg"
-            onChange={handleFile}
-            ref={inputFile}
-            type="file"
-            display="none"
-          />
-          <Avatar
-            onClick={() => inputFile.current.click()}
-            src={userData?.ava_pic}
-            size="xl"
-          />
+          <Center>
+            <Input
+              accept="image/png, image/jpeg, image/jpg"
+              onChange={handleFile}
+              ref={inputFile}
+              type="file"
+              display="none"
+            />
+            <Avatar
+              onClick={() => inputFile.current.click()}
+              src={userData?.ava_pic}
+              size="xl"
+            />
+          </Center>
           <Input
             placeholder="Fullname"
             onChange={(event) =>
@@ -182,7 +184,9 @@ const EditProfilePage = () => {
               Save
             </Button>
             <Link href="/profile">
-              <Button colorScheme="red">Cancel</Button>
+              <Button ml="2" colorScheme="red">
+                Cancel
+              </Button>
             </Link>
           </Box>
         </form>

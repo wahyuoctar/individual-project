@@ -9,7 +9,7 @@ import { fetchUserData } from "../../redux/actions/auth";
 import requiresAuth from "../../lib/hoc/requiresAuth";
 import Page from "../../components/Page";
 import Profile from "../../components/Profile";
-import PostUploader from "../../components/PostUploader";
+
 import axios from "axios";
 
 const ProfilePage = ({ photosDetail, userData }) => {
@@ -39,6 +39,7 @@ const ProfilePage = ({ photosDetail, userData }) => {
       return (
         <PhotosCard
           fullName={val?.User?.fullname || "Fullname"}
+          username={val?.User?.username}
           avaPic={val?.User?.ava_pic}
           caption={val?.caption}
           likes={val?.like_count}
@@ -52,20 +53,12 @@ const ProfilePage = ({ photosDetail, userData }) => {
     });
   };
 
-  //   useEffect(() => {
-  //     if (userSelector.id) {
-  //       dispatch(fetchUserData());
-  //       fetchPosts();
-  //     }
-  //   }, [userSelector.id]);
-
-  //   console.log(posts);
-
   return (
-    <Page title={`${userData?.fullname}' Profile`}>
+    <Page title={`${userData?.fullname}'s Profile`}>
       <Container borderRadius="md" minW="5xl" shadow="dark-lg" marginTop="10">
         <Box py="4" alignItems="center" display="flex" flexDirection="column">
           <Profile
+            username={userData?.username}
             avaPic={userData?.ava_pic}
             fullName={userData?.fullname}
             biography={userData?.biography}

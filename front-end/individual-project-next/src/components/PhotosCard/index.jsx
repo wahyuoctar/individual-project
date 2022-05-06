@@ -51,7 +51,6 @@ const PhotosCard = ({
   const toast = useToast();
   const [postLikes, setPostLikes] = useState({});
   const [likePost, setLikePost] = useState(false);
-  const router = useRouter();
   const commentLimit = 5;
 
   const formik = useFormik({
@@ -68,9 +67,9 @@ const PhotosCard = ({
         });
 
         formik.setFieldValue("content", "");
-        fetchComments();
-        renderComment();
+        fetchComments2();
         setViewComment(false);
+        refreshPage();
       } catch (error) {
         toast({
           title: "Can't Add a Comment",
@@ -105,6 +104,29 @@ const PhotosCard = ({
         ...prevComments,
         ...res?.data?.result?.comment?.rows,
       ]);
+    } catch (error) {
+      toast({
+        title: "Can't Reach The Comment Server",
+        description: "Connect The Server",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+  };
+
+  const fetchComments2 = async () => {
+    try {
+      const res = await axiosInstance.get("/posts/" + postId, {
+        params: {
+          _page: page,
+          _limit: commentLimit,
+        },
+      });
+
+      setCount(res?.data?.result?.comment?.count);
+      setCommentList(res?.data?.result?.comment?.rows);
     } catch (error) {
       toast({
         title: "Can't Reach The Comment Server",
@@ -430,21 +452,27 @@ const PhotosCard = ({
         ) : null}
 
         {viewComment ? (
-          <FormControl mt="3" ml="2" isInvalid={formik.errors.content}>
-            <FormHelperText>{formik.errors.content}</FormHelperText>
-            <Flex>
-              <Input
-                onChange={(event) =>
-                  formik.setFieldValue("content", event.target.value)
-                }
-                value={formik.values.content}
-                placeholder={"Add a comment ..."}
-              />
-              <Button onClick={formik.handleSubmit} colorScheme="green">
-                Send
-              </Button>
-            </Flex>
-          </FormControl>
+          <form>
+            <FormControl mt="3" ml="2" isInvalid={formik.errors.content}>
+              <FormHelperText>{formik.errors.content}</FormHelperText>
+              <Flex>
+                <Input
+                  onChange={(event) =>
+                    formik.setFieldValue("content", event.target.value)
+                  }
+                  value={formik.values.content}
+                  placeholder={"Add a comment ..."}
+                />
+                <Button
+                  type="submit"
+                  onClick={formik.handleSubmit}
+                  colorScheme="green"
+                >
+                  Send
+                </Button>
+              </Flex>
+            </FormControl>
+          </form>
         ) : null}
       </Box>
     </Flex>

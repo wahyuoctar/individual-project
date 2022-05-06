@@ -245,7 +245,7 @@ const UsersPhotosPage = ({ photosDetail, commentList, count }) => {
     }
   };
 
-  const webUrl = `https://proud-spoons-cover-36-69-112-86.loca.lt`;
+  const webUrl = `https://localhost:3000`;
 
   const copyLinkBtnHandler = () => {
     navigator.clipboard.writeText(`${webUrl}${router.asPath}`);
