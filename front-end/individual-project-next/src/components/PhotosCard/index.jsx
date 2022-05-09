@@ -219,7 +219,7 @@ const PhotosCard = ({
     }
   };
 
-  const viewCommentButton = () => {
+  const viewNextComment = () => {
     setPage(page + 1);
   };
 
@@ -239,9 +239,6 @@ const PhotosCard = ({
       });
 
       setPostLikes(res2?.data?.result?.post?.like_count);
-
-      // console.log(res.data.result);
-      // console.log(res2.data.result);
 
       if (!res?.data?.result) {
         return setLikePost(false);
@@ -304,7 +301,6 @@ const PhotosCard = ({
   }, [userSelector.id, useSelector.is_verified, page]);
 
   return (
-    // <Container maxW="5xl" shadow="lg" marginTop="10">
     <Flex mb={"5"}>
       {/* Box for Post Image */}
       <Box my="5" flex={65}>
@@ -443,11 +439,11 @@ const PhotosCard = ({
                 color: "blue",
               },
             }}
-            onClick={viewCommentButton}
+            onClick={viewNextComment}
             textAlign="center"
             marginTop="1"
           >
-            View All Comments
+            View More Comments
           </Text>
         ) : null}
 
@@ -476,7 +472,6 @@ const PhotosCard = ({
         ) : null}
       </Box>
     </Flex>
-    // </Container>
   );
 };
 

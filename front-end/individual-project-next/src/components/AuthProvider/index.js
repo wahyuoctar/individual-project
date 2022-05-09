@@ -11,7 +11,7 @@ const AuthProvider = ({children}) => {
 
     useEffect(async () => {
         const userToken = jsCookie.get("user_token")
-        // const savedUserData = localStorage.getItem("user_data")
+
         
         if (userToken) {
             try {
@@ -20,6 +20,11 @@ const AuthProvider = ({children}) => {
 
                 dispatch({
                     type: user_types.LOGIN_USER,
+                    payload: res.data.result.user
+                })
+
+                dispatch({
+                    type: user_types.KEEP_LOGIN,
                     payload: res.data.result.user
                 })
             } catch (err) {

@@ -103,7 +103,7 @@ const authControllers = {
             })
 
             // Token untuk email
-            const emailToken = nanoid()
+            const emailToken = nanoid(46)
 
             await VerificationToken.create({
                 token: emailToken,

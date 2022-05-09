@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { useSelector, useDispatch } from "react-redux";
@@ -31,6 +31,7 @@ const RegistrationPage = () => {
 
   // Berfungsi untuk memastikan apakah user sudah login apa belum
   const authSelector = useSelector((state) => state.auth);
+  const userSelector = useSelector((state) => state.user);
 
   // Menghandle inputan tanpa useState
   const formik = useFormik({
@@ -73,7 +74,7 @@ const RegistrationPage = () => {
     }),
   });
 
-  if (authSelector.id) {
+  if (authSelector.id || userSelector.id) {
     router.push("/");
   }
 

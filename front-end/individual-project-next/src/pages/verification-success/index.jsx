@@ -2,6 +2,7 @@ import { Box, Center, Icon, Text } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { RiCheckboxCircleLine } from "react-icons/ri";
+import { useEffect } from "react";
 
 const VerificationSuccessPage = () => {
   const userSelector = useSelector((state) => state.user);
@@ -18,6 +19,12 @@ const VerificationSuccessPage = () => {
       router.push("/");
     }, 2000);
   };
+
+  useEffect(() => {
+    if (userSelector.is_verified) {
+      router.push("/profile");
+    }
+  }, []);
 
   return (
     <Center mt="100px">
