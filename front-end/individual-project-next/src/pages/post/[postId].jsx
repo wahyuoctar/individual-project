@@ -329,51 +329,55 @@ const UsersPhotosPage = ({ photosDetail, commentList, count }) => {
                 {/* Flex for icon */}
                 <Flex>
                   {/* Icon Like */}
-                  {likePost ? (
-                    <Icon
-                      boxSize="6"
-                      onClick={unlikeButton}
-                      marginRight="4"
-                      as={FaHeart}
-                      sx={{
-                        _hover: {
-                          cursor: "pointer",
-                          color: "blue",
-                        },
-                      }}
-                    ></Icon>
-                  ) : (
-                    <Icon
-                      boxSize="6"
-                      onClick={likeButton}
-                      marginRight="4"
-                      as={FaRegHeart}
-                      sx={{
-                        _hover: {
-                          cursor: "pointer",
-                          color: "blue",
-                        },
-                      }}
-                    ></Icon>
-                  )}
 
-                  {/* Icon Comment */}
                   {userSelector.is_verified ? (
-                    <Icon
-                      onClick={hideCommentBtn}
-                      boxSize="6"
-                      marginRight="4"
-                      as={FaRegComment}
-                      sx={{
-                        _hover: {
-                          cursor: "pointer",
-                          color: "blue",
-                        },
-                      }}
-                    ></Icon>
+                    <>
+                      {likePost ? (
+                        <Icon
+                          boxSize="6"
+                          onClick={unlikeButton}
+                          marginRight="4"
+                          as={FaHeart}
+                          sx={{
+                            _hover: {
+                              cursor: "pointer",
+                              color: "blue",
+                            },
+                          }}
+                        ></Icon>
+                      ) : (
+                        <Icon
+                          boxSize="6"
+                          onClick={likeButton}
+                          marginRight="4"
+                          as={FaRegHeart}
+                          sx={{
+                            _hover: {
+                              cursor: "pointer",
+                              color: "blue",
+                            },
+                          }}
+                        ></Icon>
+                      )}
+
+                      {/* Icon Comment */}
+
+                      <Icon
+                        onClick={hideCommentBtn}
+                        boxSize="6"
+                        marginRight="9"
+                        as={FaRegComment}
+                        sx={{
+                          _hover: {
+                            cursor: "pointer",
+                            color: "blue",
+                          },
+                        }}
+                      ></Icon>
+                    </>
                   ) : null}
 
-                  <Text color="gray.400" fontWeight="hairline" ml={"5"}>
+                  <Text color="gray.400" fontWeight="hairline">
                     ({moment(photosDetail?.createdAt).format("MM/DD")})
                   </Text>
                   {/* Icon Option */}

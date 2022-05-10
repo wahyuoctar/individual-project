@@ -348,51 +348,55 @@ const PhotosCard = ({
             {/* Flex for icon */}
             <Flex>
               {/* Icon Like */}
-              {likePost ? (
-                <Icon
-                  boxSize="6"
-                  onClick={unlikeButton}
-                  marginRight="4"
-                  as={FaHeart}
-                  sx={{
-                    _hover: {
-                      cursor: "pointer",
-                      color: "blue",
-                    },
-                  }}
-                ></Icon>
-              ) : (
-                <Icon
-                  boxSize="6"
-                  onClick={likeButton}
-                  marginRight="4"
-                  as={FaRegHeart}
-                  sx={{
-                    _hover: {
-                      cursor: "pointer",
-                      color: "blue",
-                    },
-                  }}
-                ></Icon>
-              )}
 
-              {/* Icon Comment */}
+              {/* Unverified Account can't Like and Comment Post */}
               {userSelector.is_verified ? (
-                <Icon
-                  boxSize="6"
-                  marginRight="4"
-                  as={FaRegComment}
-                  onClick={hideCommentBtn}
-                  sx={{
-                    _hover: {
-                      cursor: "pointer",
-                      color: "blue",
-                    },
-                  }}
-                ></Icon>
+                <>
+                  {likePost ? (
+                    <Icon
+                      boxSize="6"
+                      onClick={unlikeButton}
+                      marginRight="4"
+                      as={FaHeart}
+                      sx={{
+                        _hover: {
+                          cursor: "pointer",
+                          color: "blue",
+                        },
+                      }}
+                    ></Icon>
+                  ) : (
+                    <Icon
+                      boxSize="6"
+                      onClick={likeButton}
+                      marginRight="4"
+                      as={FaRegHeart}
+                      sx={{
+                        _hover: {
+                          cursor: "pointer",
+                          color: "blue",
+                        },
+                      }}
+                    ></Icon>
+                  )}
+
+                  {/* Icon Comment */}
+                  <Icon
+                    boxSize="6"
+                    marginRight="9"
+                    as={FaRegComment}
+                    onClick={hideCommentBtn}
+                    sx={{
+                      _hover: {
+                        cursor: "pointer",
+                        color: "blue",
+                      },
+                    }}
+                  ></Icon>
+                </>
               ) : null}
 
-              <Text color="gray.400" fontWeight="hairline" ml={"5"}>
+              <Text color="gray.400" fontWeight="hairline">
                 ({moment(postDate).format("MM/DD")})
               </Text>
               {/* Icon Option */}
