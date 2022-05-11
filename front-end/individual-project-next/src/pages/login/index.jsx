@@ -46,7 +46,6 @@ const LoginPage = () => {
       setTimeout(() => {
         dispatch(userLogin(values, formik.setSubmitting));
       }, 3000);
-      // router.push("/profile");
     },
     validationSchema: Yup.object().shape({
       username: Yup.string()

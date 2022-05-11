@@ -72,11 +72,6 @@ const userControllers = {
             const { userId } = req.params
             const {fullname, biography, username, current_city} = req.body
             
-            // Variable variable yg berfungsi untuk nama file pada avatar yg diupload
-            const filename = req.file
-            const uploadFileDomain = process.env.UPLOAD_FILE_DOMAIN
-            const filePath = "ava_pics"
-            
             // Mencari user apakah ada atau tidak
             const findUser = await User.findOne({
                 where: {
@@ -97,94 +92,79 @@ const userControllers = {
                 }
             })
             
-            if (!username || username == findUser.username) {
-                if (filename) {
-                    const editedUser = await User.update({
-                        fullname,
-                        biography,
-                        username: `${findUser.username}`,
-                        ava_pic: `${uploadFileDomain}/${filePath}/${filename}`,
-                        current_city
-                    }, {
-                        where: {
-                            id: userId
-                        }
-                    })
-        
-                    return res.status(200).json({
-                        message: "User Edited",
-                        result: editedUser
-                    })
-                }
-                else if (!filename) {
-                    const editedUser = await User.update({
-                        fullname,
-                        biography,
-                        username: `${findUser.username}`,
-                        ava_pic: `${findUser.ava_pic}`,
-                        current_city
-                    }, {
-                        where: {
-                            id: userId
-                        }
-                    })
-        
-                   return res.status(200).json({
-                        message: "User Edited",
-                        result: editedUser
-                    })    
-                }
-            }
-            
             if (findUsername) {
                 return res.status(400).json({
                     message: "Please use different Username!"
                 })
             }
+
+
             
             // todo: edit foto, tapi file pada public ditimpa
-            if (filename) {
+
                 const editedUser = await User.update({
-                    fullname,
-                    biography,
-                    username,
-                    ava_pic: `${uploadFileDomain}/${filePath}/${filename}`,
-                    current_city
+                    fullname: fullname || findUser.fullname,
+                    biography: biography || findUser.biography,
+                    username: username || findUser.username,
+                    current_city: current_city || findUser.current_city
                 }, {
                     where: {
                         id: userId
                     }
                 })
-    
-                return res.status(200).json({
+
+                res.status(200).json({
                     message: "User Edited",
                     result: editedUser
-                })
-            }
-            else if (!filename) {
-                const editedUser = await User.update({
-                    fullname,
-                    biography,
-                    username,
-                    ava_pic: `${findUser.ava_pic}`,
-                    current_city
-                }, {
-                    where: {
-                        id: userId
-                    }
-                })
-    
-               return res.status(200).json({
-                    message: "User Edited",
-                    result: editedUser
-                })    
-            }
+                }) 
+            
         } catch (err) {
             console.log(err);
             res.status(500).json({
                 message: "Can't reach Server"
             })
         } 
+    },
+
+    editUserAvatar: async (req, res) => {
+        try {
+            const { userId } = req.params
+
+            const {filename} = req.file
+            const uploadFileDomain = process.env.UPLOAD_FILE_DOMAIN
+            const filePath = "ava_pics"
+            
+            // Mencari user apakah ada atau tidak
+            const findUser = await User.findOne({
+                where: {
+                    id: userId
+                }
+            })
+
+            if (!findUser) {
+                return res.status(400).json({
+                    message: "User not Found!"
+                })
+            }
+
+            const editUserAvatar = await User.update({
+                ava_pic: `${uploadFileDomain}/${filePath}/${filename}`,
+            }, {
+                where: {
+                    id: userId
+                }
+            })
+
+            res.status(200).json({
+                message: "User Avatar Edited",
+                result: editUserAvatar
+            }) 
+        } catch (err) {
+            console.log(err);
+            res.status(500).json({
+                message: "Can't reach Server"
+            })
+        }
     },
 
     getUserById: async (req, res) => {

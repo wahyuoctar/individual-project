@@ -22,6 +22,10 @@ export function userLogin (values, setSubmitting)  {
         type: user_types.LOGIN_USER,
         payload: userResponse.user,
       });
+      // dispatch({
+      //   type: user_types.KEEP_LOGIN,
+      //   payload: userResponse.user,
+      // });
 
       setSubmitting(false)
     } catch (err) {
@@ -78,6 +82,7 @@ export const fetchUserData = () => {
         type: user_types.KEEP_LOGIN,
         payload: res.data.result,
       });
+      
     } catch (err) {
       console.log(err);
     }

@@ -23,7 +23,6 @@ import moment from "moment";
 import { FaRegHeart, FaRegComment, FaHeart } from "react-icons/fa";
 import { BsGripVertical } from "react-icons/bs";
 import { useSelector } from "react-redux";
-import { useRouter } from "next/router";
 import { axiosInstance } from "../../config/api";
 import { useEffect, useState } from "react";
 import { useFormik } from "formik";
@@ -141,7 +140,7 @@ const PhotosCard = ({
 
   const deleteButton = async () => {
     try {
-      if (confirm("Are You Sure to Delete This Post ?")) {
+      if (confirm("Are you sure to Delete this post ?")) {
         await axiosInstance.delete("/posts/" + postId);
         refreshPage();
       } else {

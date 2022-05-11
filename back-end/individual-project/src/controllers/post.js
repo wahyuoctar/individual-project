@@ -4,7 +4,7 @@ const fs = require("fs")
 const postControllers = {
     getAllPosts: async (req, res) => {
         try {
-            const {_limit = 7, _page = 1 } = req.query
+            const {_limit = 5, _page = 1 } = req.query
 
             delete req.query._limit
             delete req.query._page

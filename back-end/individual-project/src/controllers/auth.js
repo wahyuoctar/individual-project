@@ -183,7 +183,7 @@ const authControllers = {
         try {
             const {token} = req
 
-            const newToken = nanoid(21)
+            const newToken = nanoid(46)
             const findUser = await User.findByPk(token.user_id)
 
             delete findUser.dataValues.password

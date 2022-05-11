@@ -21,6 +21,7 @@ import Profile from "../../components/Profile";
 import { fetchUserData } from "../../redux/actions/auth";
 
 const ProfilePage = () => {
+  const [userData, setUserData] = useState({});
   const [posts, setPosts] = useState([]);
   const [postsLike, setPostsLike] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -69,6 +70,16 @@ const ProfilePage = () => {
       refreshPage();
     } catch (err) {
       console.log(err);
+    }
+  };
+
+  const fetchUser = async () => {
+    try {
+      const res = await axiosInstance.get("/users/" + userSelector.id);
+
+      setUserData(res?.data?.result);
+    } catch (err) {
+      console.log(err.message);
     }
   };
 
@@ -164,8 +175,9 @@ const ProfilePage = () => {
       dispatch(fetchUserData());
       fetchPosts();
       fetchPostsLike();
+      fetchUser();
     }
-  }, [userSelector]);
+  }, [userSelector.id]);
 
   return (
     <Page title={`My Profile`}>
@@ -178,14 +190,14 @@ const ProfilePage = () => {
       >
         <Box py="4" alignItems="center" display="flex" flexDirection="column">
           <Profile
-            avaPic={userSelector?.ava_pic}
-            fullName={userSelector?.fullname}
-            biography={userSelector?.biography}
-            currentCity={userSelector?.current_city}
-            followers={userSelector?.followers}
-            following={userSelector?.following}
-            posts={userSelector?.posts}
-            username={userSelector?.username}
+            avaPic={userData?.ava_pic}
+            fullName={userData?.fullname}
+            biography={userData?.biography}
+            currentCity={userData?.current_city}
+            followers={userData?.followers}
+            following={userData?.following}
+            posts={userData?.posts}
+            username={userData?.username}
           />
           <Divider />
           {userSelector.is_verified ? (

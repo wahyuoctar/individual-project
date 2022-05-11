@@ -4,6 +4,7 @@ import {
   Button,
   Center,
   Container,
+  Flex,
   Input,
   useToast,
 } from "@chakra-ui/react";
@@ -47,20 +48,19 @@ const EditProfilePage = () => {
 
   const uploadHandler = async () => {
     const formData = new FormData();
-    const { fullname, username, biography, current_city } = formik.values;
+    // const { fullname, username, biography, current_city } = formik.values;
 
-    formData.append("fullname", fullname);
-    formData.append("username", username);
-    formData.append("biography", biography);
-    formData.append("current_city", current_city);
+    // formData.append("fullname", fullname);
+    // formData.append("username", username);
+    // formData.append("biography", biography);
+    // formData.append("current_city", current_city);
     formData.append("ava_pics", selectedFile);
-
     // fetchUser();
 
     // router.push("/");
 
     try {
-      await axiosInstance.patch("/users/" + userData.id, formData);
+      await axiosInstance.patch("/users/" + userData?.id + "/avatar", formData);
       setSelectedFile(null);
 
       const newData = {
@@ -80,17 +80,11 @@ const EditProfilePage = () => {
         type: user_types.LOGIN_USER,
         payload: newData,
       });
-      dispatch({
-        type: user_types.KEEP_LOGIN,
-        payload: newData,
-      });
-      formik.setFieldValue("fullname", "");
-      formik.setFieldValue("username", "");
-      formik.setFieldValue("biography", "");
-      formik.setFieldValue("current_city", "");
+
+      fetchUser();
     } catch (error) {
       toast({
-        title: "Can't Reach The Server",
+        title: "Can't Reach Edit Avatar Server",
         description: "Connect The Server",
         status: "error",
         duration: 3000,
@@ -100,14 +94,61 @@ const EditProfilePage = () => {
     }
   };
 
+  const refreshPage = () => {
+    window.location.reload();
+  };
+
   const formik = useFormik({
     initialValues: {
-      fullname: `${userSelector?.fullname}`,
-      username: `${userSelector?.username}`,
-      biography: `${userSelector?.biography || ""}`,
-      current_city: `${userSelector?.current_city || ""}`,
+      fullname: "",
+      username: "",
+      biography: "",
+      current_city: "",
     },
     validateOnChange: false,
+    onSubmit: async (values) => {
+      try {
+        await axiosInstance.patch("/users/" + userSelector.id, {
+          fullname: values.fullname,
+          username: values.username,
+          biography: values.biography,
+          current_city: values.current_city,
+        });
+
+        const newData = {
+          username: userData.username || userSelector.username,
+          id: userSelector.id,
+          email: userSelector.email,
+          biography: userData.biography || userSelector.biography,
+          current_city: userData.current_city || userSelector.current_city,
+          ava_pic: userData.ava_pic || userSelector.ava_pic,
+          is_verified: userData.is_verified,
+          fullname: userData.fullname || userSelector.fullname,
+          followers: userData.followers,
+          following: userData.following,
+          posts: userData.posts,
+        };
+        dispatch({
+          type: user_types.LOGIN_USER,
+          payload: newData,
+        });
+
+        formik.setFieldValue("fullname", "");
+        formik.setFieldValue("username", "");
+        formik.setFieldValue("current_city", "");
+        formik.setFieldValue("biography", "");
+        router.push("/profile");
+      } catch (error) {
+        toast({
+          title: "Can't Reach Edit User Data Server",
+          description: "Connect The Server",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+      }
+    },
   });
 
   useEffect(() => {
@@ -115,8 +156,6 @@ const EditProfilePage = () => {
       dispatch(fetchUserData());
 
       fetchUser();
-    } else if (!userSelector.id) {
-      router.push("/");
     }
   }, [userSelector.id]);
 
@@ -132,7 +171,7 @@ const EditProfilePage = () => {
         shadow="dark-lg"
         marginTop="10"
       >
-        <form>
+        <Flex flexDirection="column">
           <Center>
             <Input
               accept="image/png, image/jpeg, image/jpg"
@@ -145,10 +184,17 @@ const EditProfilePage = () => {
               onClick={() => inputFile.current.click()}
               src={userData?.ava_pic}
               size="xl"
+              _hover={{ cursor: "pointer" }}
             />
           </Center>
+          <Button mt="3" colorScheme="green" onClick={uploadHandler}>
+            UPLOAD AVATAR
+          </Button>
+        </Flex>
+
+        <form>
           <Input
-            placeholder="Fullname"
+            placeholder={`${userData?.fullname || "Fullname"}`}
             onChange={(event) =>
               formik.setFieldValue("fullname", event.target.value)
             }
@@ -156,7 +202,7 @@ const EditProfilePage = () => {
             my="4"
           />
           <Input
-            placeholder={`${userData?.username}`}
+            placeholder={`${userData?.username || "Username"}`}
             onChange={(event) =>
               formik.setFieldValue("username", event.target.value)
             }
@@ -164,7 +210,7 @@ const EditProfilePage = () => {
             my="4"
           />
           <Input
-            placeholder="Biography"
+            placeholder={`${userData?.biography || "Biography"}`}
             onChange={(event) =>
               formik.setFieldValue("biography", event.target.value)
             }
@@ -172,7 +218,7 @@ const EditProfilePage = () => {
             my="4"
           />
           <Input
-            placeholder="Current City"
+            placeholder={`${userData?.current_city || "Current City"}`}
             onChange={(event) =>
               formik.setFieldValue("current_city", event.target.value)
             }
@@ -180,7 +226,11 @@ const EditProfilePage = () => {
             my="4"
           />
           <Box>
-            <Button type="submit" onClick={uploadHandler} colorScheme="green">
+            <Button
+              type="submit"
+              onClick={formik.handleSubmit}
+              colorScheme="green"
+            >
               Save
             </Button>
             <Link href="/profile">

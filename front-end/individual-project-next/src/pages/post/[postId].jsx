@@ -245,7 +245,7 @@ const UsersPhotosPage = ({ photosDetail, commentList, count }) => {
     }
   };
 
-  const webUrl = `https://localhost:3000`;
+  const webUrl = `https://long-radios-yell-36-69-118-109.loca.lt`;
 
   const copyLinkBtnHandler = () => {
     navigator.clipboard.writeText(`${webUrl}${router.asPath}`);
@@ -457,7 +457,7 @@ const UsersPhotosPage = ({ photosDetail, commentList, count }) => {
                 textAlign="center"
                 marginTop="1"
               >
-                View All Comments
+                View More Comments
               </Text>
             ) : null}
 

@@ -23,7 +23,7 @@ const HomePage = () => {
 
   const toast = useToast();
 
-  const limitPage = 3;
+  const limitPage = 5;
 
   const fetchContentList = async () => {
     try {

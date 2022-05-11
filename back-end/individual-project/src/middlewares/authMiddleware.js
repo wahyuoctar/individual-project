@@ -10,8 +10,6 @@ const authorizedLoggedInUser = async (req, res, next) => {
 
         req.token = verifiedToken.dataValues
 
-        console.log(req.token);
-
         next()
     } catch (err) {
         console.log(err)

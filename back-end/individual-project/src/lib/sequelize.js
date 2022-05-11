@@ -28,8 +28,6 @@ Post.belongsTo(User, {foreignKey: "user_id"})
 
 
 // Associations M:M
-// User.belongsToMany(Post, {through: Comment, foreignKey: "user_id", as: "user_comments"})
-// Post.belongsToMany(User, {through: Comment, foreignKey: "post_id", as: "user_comments"})
 Comment.belongsTo(User, {foreignKey: "user_id"})
 User.hasMany(Comment, {foreignKey: "user_id"})
 Comment.belongsTo(Post, {foreignKey: "post_id"})

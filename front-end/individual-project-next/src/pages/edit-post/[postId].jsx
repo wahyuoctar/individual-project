@@ -6,21 +6,15 @@ import {
   Stack,
   useToast,
   Flex,
-  Divider,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  Menu,
   Input,
   Container,
   FormLabel,
   Button,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+
 import Link from "next/link";
-import { useRouter } from "next/router";
+
 import { axiosInstance } from "../../config/api";
-import { useSelector } from "react-redux";
 import axios from "axios";
 import moment from "moment";
 import { useFormik } from "formik";
@@ -28,6 +22,10 @@ import Page from "../../components/Page";
 
 const EditPostPage = ({ photosDetail }) => {
   const toast = useToast();
+
+  const refreshPage = () => {
+    window.location.reload();
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -44,6 +42,7 @@ const EditPostPage = ({ photosDetail }) => {
 
         formik.setFieldValue("caption", "");
         formik.setFieldValue("location", "");
+        refreshPage();
       } catch (error) {
         toast({
           title: "Can't Reach The Server",
@@ -150,7 +149,6 @@ export async function getServerSideProps(context) {
   return {
     props: {
       photosDetail: res?.data?.result?.post,
-      //   userData: res?.data?.result[0]?.User,
     },
   };
 }
