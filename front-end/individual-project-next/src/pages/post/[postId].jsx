@@ -245,7 +245,7 @@ const UsersPhotosPage = ({ photosDetail, commentList, count }) => {
     }
   };
 
-  const webUrl = `https://long-radios-yell-36-69-118-109.loca.lt`;
+  const webUrl = `https://silver-pigs-peel-36-69-118-109.loca.lt`;
 
   const copyLinkBtnHandler = () => {
     navigator.clipboard.writeText(`${webUrl}${router.asPath}`);

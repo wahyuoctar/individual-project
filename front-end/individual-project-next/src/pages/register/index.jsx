@@ -45,11 +45,6 @@ const RegistrationPage = () => {
     onSubmit: (values) => {
       setTimeout(() => {
         dispatch(userRegister(values, formik.setSubmitting));
-        formik.setFieldValue("fullname", "");
-        formik.setFieldValue("username", "");
-        formik.setFieldValue("password", "");
-        formik.setFieldValue("repeatPassword", "");
-        formik.setFieldValue("email", "");
         router.push("/login");
       }, 3000);
     },

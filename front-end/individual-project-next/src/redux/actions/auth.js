@@ -2,6 +2,8 @@
 import { axiosInstance } from "../../config/api";
 import { network_types, user_types } from "../types";
 import jsCookie from "js-cookie";
+import { Router, useRouter } from "next/router";
+
 
 
 
@@ -28,6 +30,7 @@ export function userLogin (values, setSubmitting)  {
       // });
 
       setSubmitting(false)
+
     } catch (err) {
       console.log(err)
 
@@ -52,9 +55,8 @@ export function userRegister (values, setSubmitting)  {
         email: values.email,
         password: values.password,
       });
-      
-
       setSubmitting(false)
+
     } catch (err) {
 
       dispatch({
