@@ -17,16 +17,16 @@ import {
   Button,
   FormControl,
   FormHelperText,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 // import Link from "next/link";
-import moment from "moment";
-import { FaRegHeart, FaRegComment, FaHeart } from "react-icons/fa";
-import { BsGripVertical } from "react-icons/bs";
-import { useSelector } from "react-redux";
-import { axiosInstance } from "../../config/api";
-import { useEffect, useState } from "react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
+import moment from 'moment';
+import { FaRegHeart, FaRegComment, FaHeart } from 'react-icons/fa';
+import { BsGripVertical } from 'react-icons/bs';
+import { useSelector } from 'react-redux';
+import { axiosInstance } from '../../config/api';
+import { useEffect, useState } from 'react';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 const PhotosCard = ({
   imageUrl,
@@ -54,29 +54,29 @@ const PhotosCard = ({
 
   const formik = useFormik({
     initialValues: {
-      content: "",
+      content: '',
     },
     validateOnChange: true,
     onSubmit: async (values) => {
       try {
-        await axiosInstance.post("/comments/post/" + postId, {
+        await axiosInstance.post('/comments/post/' + postId, {
           post_id: postId,
           user_id: userSelector.id,
           content: values.content,
         });
 
-        formik.setFieldValue("content", "");
+        formik.setFieldValue('content', '');
         fetchComments2();
         setViewComment(false);
         refreshPage();
       } catch (error) {
         toast({
           title: "Can't Add a Comment",
-          description: "Connect The Server",
-          status: "error",
+          description: 'Connect The Server',
+          status: 'error',
           duration: 3000,
           isClosable: true,
-          position: "top",
+          position: 'top',
         });
       }
     },
@@ -91,7 +91,7 @@ const PhotosCard = ({
 
   const fetchComments = async () => {
     try {
-      const res = await axiosInstance.get("/posts/" + postId, {
+      const res = await axiosInstance.get('/posts/' + postId, {
         params: {
           _page: page,
           _limit: commentLimit,
@@ -106,18 +106,18 @@ const PhotosCard = ({
     } catch (error) {
       toast({
         title: "Can't Reach The Comment Server",
-        description: "Connect The Server",
-        status: "error",
+        description: 'Connect The Server',
+        status: 'error',
         duration: 3000,
         isClosable: true,
-        position: "top",
+        position: 'top',
       });
     }
   };
 
   const fetchComments2 = async () => {
     try {
-      const res = await axiosInstance.get("/posts/" + postId, {
+      const res = await axiosInstance.get('/posts/' + postId, {
         params: {
           _page: page,
           _limit: commentLimit,
@@ -129,19 +129,19 @@ const PhotosCard = ({
     } catch (error) {
       toast({
         title: "Can't Reach The Comment Server",
-        description: "Connect The Server",
-        status: "error",
+        description: 'Connect The Server',
+        status: 'error',
         duration: 3000,
         isClosable: true,
-        position: "top",
+        position: 'top',
       });
     }
   };
 
   const deleteButton = async () => {
     try {
-      if (confirm("Are you sure to Delete this post ?")) {
-        await axiosInstance.delete("/posts/" + postId);
+      if (confirm('Are you sure to Delete this post ?')) {
+        await axiosInstance.delete('/posts/' + postId);
         refreshPage();
       } else {
         return;
@@ -151,24 +151,30 @@ const PhotosCard = ({
       console.log(error);
       toast({
         title: "Can't Reach The Server",
-        description: "Connect The Server",
-        status: "error",
+        description: 'Connect The Server',
+        status: 'error',
         duration: 3000,
         isClosable: true,
-        position: "top",
+        position: 'top',
       });
     }
   };
 
   const renderComment = () => {
     if (isInProfile) {
-      return commentList.map((val) => {
+      return commentList.map((val, idx) => {
         return (
-          <Box display="flex" marginLeft="4" marginRight="2" marginTop="1">
+          <Box
+            key={idx}
+            display="flex"
+            marginLeft="4"
+            marginRight="2"
+            marginTop="1"
+          >
             <Text lineHeight="4">
               <b>{val?.User?.username} </b>
-              <span style={{ color: "gray.400", fontWeight: "lighter" }}>
-                {`(${moment(val?.createdAt).format("MM/DD")})`}{" "}
+              <span style={{ color: 'gray.400', fontWeight: 'lighter' }}>
+                {`(${moment(val?.createdAt).format('MM/DD')})`}{' '}
               </span>
               {val?.content}
             </Text>
@@ -176,9 +182,15 @@ const PhotosCard = ({
         );
       });
     } else if (!isInProfile) {
-      return commentList.map((val) => {
+      return commentList.map((val, idx) => {
         return (
-          <Box display="flex" marginLeft="4" marginRight="2" marginTop="1">
+          <Box
+            key={idx}
+            display="flex"
+            marginLeft="4"
+            marginRight="2"
+            marginTop="1"
+          >
             <Text lineHeight="4">
               {val?.user_id == userSelector?.id ? (
                 <>
@@ -188,10 +200,10 @@ const PhotosCard = ({
                     textDecoration="none"
                     href={`/profile`}
                   >
-                    {val?.User?.username}{" "}
+                    {val?.User?.username}{' '}
                   </Link>
-                  <span style={{ color: "gray.400", fontWeight: "lighter" }}>
-                    {`(${moment(val?.createdAt).format("MM/DD")})`}{" "}
+                  <span style={{ color: 'gray.400', fontWeight: 'lighter' }}>
+                    {`(${moment(val?.createdAt).format('MM/DD')})`}{' '}
                   </span>
                 </>
               ) : (
@@ -201,11 +213,12 @@ const PhotosCard = ({
                     fontWeight="bold"
                     textDecoration="none"
                     href={`/profile/${val?.user_id}`}
+                    key={idx}
                   >
-                    {val?.User?.username}{" "}
+                    {val?.User?.username}{' '}
                   </Link>
-                  <span style={{ color: "gray.400", fontWeight: "lighter" }}>
-                    {`(${moment(val?.createdAt).format("MM/DD")})`}{" "}
+                  <span style={{ color: 'gray.400', fontWeight: 'lighter' }}>
+                    {`(${moment(val?.createdAt).format('MM/DD')})`}{' '}
                   </span>
                 </>
               )}
@@ -228,9 +241,9 @@ const PhotosCard = ({
 
   const fetchLike = async () => {
     try {
-      const res = await axiosInstance.get("/likes/post/" + postId);
+      const res = await axiosInstance.get('/likes/post/' + postId);
 
-      const res2 = await axiosInstance.get("/posts/" + postId, {
+      const res2 = await axiosInstance.get('/posts/' + postId, {
         params: {
           _page: page,
           _limit: commentLimit,
@@ -247,47 +260,47 @@ const PhotosCard = ({
     } catch (error) {
       toast({
         title: "Can't Reach Like Server",
-        description: "Connect The Server",
-        status: "error",
+        description: 'Connect The Server',
+        status: 'error',
         duration: 3000,
         isClosable: true,
-        position: "top",
+        position: 'top',
       });
     }
   };
 
   const likeButton = async () => {
     try {
-      await axiosInstance.post("/likes/post/" + postId);
+      await axiosInstance.post('/likes/post/' + postId);
 
       setLikePost(true);
       fetchLike();
     } catch (error) {
       toast({
         title: "Can't Reach Like Server",
-        description: "Connect The Server",
-        status: "error",
+        description: 'Connect The Server',
+        status: 'error',
         duration: 3000,
         isClosable: true,
-        position: "top",
+        position: 'top',
       });
     }
   };
 
   const unlikeButton = async () => {
     try {
-      await axiosInstance.delete("/likes/post/" + postId);
+      await axiosInstance.delete('/likes/post/' + postId);
 
       setLikePost(false);
       fetchLike();
     } catch (error) {
       toast({
         title: "Can't Reach Like Server",
-        description: "Connect The Server",
-        status: "error",
+        description: 'Connect The Server',
+        status: 'error',
         duration: 3000,
         isClosable: true,
-        position: "top",
+        position: 'top',
       });
     }
   };
@@ -300,7 +313,7 @@ const PhotosCard = ({
   }, [userSelector.id, useSelector.is_verified, page]);
 
   return (
-    <Flex mb={"5"}>
+    <Flex mb={'5'}>
       {/* Box for Post Image */}
       <Box my="5" flex={65}>
         <Stack>
@@ -359,8 +372,8 @@ const PhotosCard = ({
                       as={FaHeart}
                       sx={{
                         _hover: {
-                          cursor: "pointer",
-                          color: "blue",
+                          cursor: 'pointer',
+                          color: 'blue',
                         },
                       }}
                     ></Icon>
@@ -372,8 +385,8 @@ const PhotosCard = ({
                       as={FaRegHeart}
                       sx={{
                         _hover: {
-                          cursor: "pointer",
-                          color: "blue",
+                          cursor: 'pointer',
+                          color: 'blue',
                         },
                       }}
                     ></Icon>
@@ -387,8 +400,8 @@ const PhotosCard = ({
                     onClick={hideCommentBtn}
                     sx={{
                       _hover: {
-                        cursor: "pointer",
-                        color: "blue",
+                        cursor: 'pointer',
+                        color: 'blue',
                       },
                     }}
                   ></Icon>
@@ -396,7 +409,7 @@ const PhotosCard = ({
               ) : null}
 
               <Text color="gray.400" fontWeight="hairline">
-                ({moment(postDate).format("MM/DD")})
+                ({moment(postDate).format('MM/DD')})
               </Text>
               {/* Icon Option */}
               {postUserId == userSelector.id ? (
@@ -408,8 +421,8 @@ const PhotosCard = ({
                       as={BsGripVertical}
                       sx={{
                         _hover: {
-                          cursor: "pointer",
-                          color: "blue",
+                          cursor: 'pointer',
+                          color: 'blue',
                         },
                       }}
                     ></Icon>
@@ -430,7 +443,7 @@ const PhotosCard = ({
             <Text>{caption}</Text>
           </Box>
         </Flex>
-        <Divider ml={"2"} />
+        <Divider ml={'2'} />
 
         {/* Box Comment */}
         {renderComment()}
@@ -438,8 +451,8 @@ const PhotosCard = ({
           <Text
             sx={{
               _hover: {
-                cursor: "pointer",
-                color: "blue",
+                cursor: 'pointer',
+                color: 'blue',
               },
             }}
             onClick={viewNextComment}
@@ -457,10 +470,10 @@ const PhotosCard = ({
               <Flex>
                 <Input
                   onChange={(event) =>
-                    formik.setFieldValue("content", event.target.value)
+                    formik.setFieldValue('content', event.target.value)
                   }
                   value={formik.values.content}
-                  placeholder={"Add a comment ..."}
+                  placeholder={'Add a comment ...'}
                 />
                 <Button
                   type="submit"

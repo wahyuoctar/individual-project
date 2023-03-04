@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-key */
+/* eslint-disable jsx-a11y/alt-text */
 import {
   Box,
   Avatar,
@@ -263,6 +265,7 @@ const UsersPhotosPage = ({ photosDetail, commentList, count }) => {
       fetchLike();
     }
     return fetchLike();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userSelector.id, page]);
 
   return (
